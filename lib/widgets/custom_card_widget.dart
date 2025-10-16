@@ -20,10 +20,11 @@ class CustomCardContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Positioned(
       top: topPosition,
-      left: MediaQuery.of(context).size.width * 0.06,
-      right: MediaQuery.of(context).size.width * 0.06,
+      left: screenWidth * 0.06,
+      right: screenWidth * 0.06,
       child: Card(
         elevation: elevation,
         shape: RoundedRectangleBorder(

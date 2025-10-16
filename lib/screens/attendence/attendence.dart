@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:school_management_frontend/theme/app_colors.dart';
 
 class AttendanceScreen extends StatefulWidget {
@@ -10,18 +11,25 @@ class AttendanceScreen extends StatefulWidget {
 
 class _AttendanceScreenState extends State<AttendanceScreen> {
   // Attendance data for all students
-  List<List<bool>> attendanceData = List.generate(50, (_) => List.generate(3, (_) => false));
-  
+  List<List<bool>> attendanceData =
+      List.generate(50, (_) => List.generate(3, (_) => false));
+
   // Pagination
   int currentPage = 0;
   final int studentsPerPage = 10;
-  
+
   // Date
   DateTime selectedDate = DateTime.now();
   String? selectedClass = 'Class 1';
-  
+
   // Class options
-  final List<String> classes = ['Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5'];
+  final List<String> classes = [
+    'Class 1',
+    'Class 2',
+    'Class 3',
+    'Class 4',
+    'Class 5'
+  ];
 
   int get totalPages => (attendanceData.length / studentsPerPage).ceil();
 
@@ -29,7 +37,9 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     final startIndex = currentPage * studentsPerPage;
     final endIndex = (currentPage + 1) * studentsPerPage;
     return List.generate(
-      (endIndex > attendanceData.length ? attendanceData.length - startIndex : studentsPerPage),
+      (endIndex > attendanceData.length
+          ? attendanceData.length - startIndex
+          : studentsPerPage),
       (index) => startIndex + index,
     );
   }
@@ -49,17 +59,16 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   }
 
   void _submitAttendance() {
-    // Count attendance
     int presentCount = 0;
     int lateCount = 0;
     int absentCount = 0;
-    
+
     for (var student in attendanceData) {
       if (student[0]) presentCount++;
       if (student[1]) lateCount++;
       if (student[2]) absentCount++;
     }
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -68,7 +77,8 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Date: ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}'),
+            Text(
+                'Date: ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}'),
             Text('Class: $selectedClass'),
             Text('Present: $presentCount'),
             Text('Late: $lateCount'),
@@ -104,12 +114,18 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isWeb = screenWidth > 800;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text(
+        title: AutoSizeText(
           'Demo Public School',
-          style: TextStyle(
+          maxLines: 1,
+          minFontSize: 14,
+          maxFontSize: 22,
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
@@ -118,6 +134,8 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
         elevation: 0,
       ),
       body: Container(
+        width: double.infinity,
+        height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -130,7 +148,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(isWeb ? 24.0 : 16.0),
           child: Column(
             children: [
               // Header with Date and Class Selection
@@ -147,7 +165,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                   ],
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(isWeb ? 20 : 12),
                   child: Row(
                     children: [
                       // Date Picker
@@ -155,31 +173,40 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            AutoSizeText(
                               'Select Date',
+                              maxLines: 1,
+                              minFontSize: 12,
+                              maxFontSize: isWeb ? 18 : 14,
                               style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.green,
-                              ),
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.green),
                             ),
                             const SizedBox(height: 8),
                             GestureDetector(
                               onTap: () => _selectDate(context),
                               child: Container(
-                                padding: const EdgeInsets.all(12),
+                                padding: EdgeInsets.all(isWeb ? 14 : 12),
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: const Color(0xFF008080)),
+                                  border:
+                                      Border.all(color: const Color(0xFF008080)),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Row(
                                   children: [
-                                    const Icon(Icons.calendar_today, size: 20, color: Color(0xFF008080)),
+                                    Icon(Icons.calendar_today,
+                                        size: isWeb ? 22 : 20,
+                                        color: const Color(0xFF008080)),
                                     const SizedBox(width: 8),
-                                    Text(
-                                      '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}',
-                                      style: const TextStyle(
-                                        color: AppColors.green,
-                                        fontWeight: FontWeight.bold,
+                                    Expanded(
+                                      child: AutoSizeText(
+                                        '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}',
+                                        maxLines: 1,
+                                        minFontSize: 10,
+                                        maxFontSize: isWeb ? 16 : 14,
+                                        style: const TextStyle(
+                                            color: AppColors.green,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ),
                                   ],
@@ -190,40 +217,46 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                         ),
                       ),
                       const SizedBox(width: 16),
-                      
+
                       // Class Dropdown
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            AutoSizeText(
                               'Select Class',
+                              maxLines: 1,
+                              minFontSize: 12,
+                              maxFontSize: isWeb ? 18 : 14,
                               style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.green,
-                              ),
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.green),
                             ),
                             const SizedBox(height: 8),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: isWeb ? 14 : 12),
                               decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.green,),
+                                border: Border.all(color: AppColors.green),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: DropdownButtonHideUnderline(
                                 child: DropdownButton<String>(
                                   value: selectedClass,
-                                  icon: const Icon(Icons.arrow_drop_down, color: AppColors.green,),
+                                  icon: Icon(Icons.arrow_drop_down,
+                                      color: AppColors.green),
                                   isExpanded: true,
                                   items: classes.map((String classItem) {
                                     return DropdownMenuItem<String>(
                                       value: classItem,
-                                      child: Text(
+                                      child: AutoSizeText(
                                         classItem,
+                                        maxLines: 1,
+                                        minFontSize: 10,
+                                        maxFontSize: isWeb ? 16 : 14,
                                         style: const TextStyle(
-                                          color: AppColors.green,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                            color: AppColors.green,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     );
                                   }).toList(),
@@ -244,54 +277,40 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Class Header Row
-              // Container(
-              //   decoration: BoxDecoration(
-              //     color: const Color(0xFF008080),
-              //     borderRadius: BorderRadius.circular(8),
-              //   ),
-              //   child: Padding(
-              //     padding: const EdgeInsets.symmetric(vertical: 12.0),
-              //     child: Row(
-              //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //       children: classes.map((className) => _buildClassHeader(className)).toList(),
-              //     ),
-              //   ),
-              // ),
-              // const SizedBox(height: 16),
-
               // Table Header
               Container(
                 decoration: BoxDecoration(
                   color: AppColors.green,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12.0),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: isWeb ? 16.0 : 12.0,
+                      horizontal: isWeb ? 12 : 8),
                   child: Row(
                     children: [
                       Expanded(
                         flex: 2,
-                        child: Text(
+                        child: AutoSizeText(
                           'Student Name',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
                           textAlign: TextAlign.center,
+                          maxLines: 1,
+                          minFontSize: 12,
+                          maxFontSize: isWeb ? 18 : 14,
+                          style: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),
                       Expanded(
                         flex: 3,
-                        child: Text(
+                        child: AutoSizeText(
                           'Attendance',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
                           textAlign: TextAlign.center,
+                          maxLines: 1,
+                          minFontSize: 12,
+                          maxFontSize: isWeb ? 18 : 14,
+                          style: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -306,93 +325,112 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                   itemCount: currentStudentIndices.length,
                   itemBuilder: (context, index) {
                     final studentIndex = currentStudentIndices[index];
-                    return _buildStudentRow(studentIndex, index + 1);
+                    return _buildStudentRow(studentIndex, index + 1, isWeb);
                   },
                 ),
               ),
-
-              // Pagination and Submit Button
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+              SizedBox(height: 16,),
+Container(
+  decoration: BoxDecoration(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(8),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.grey.withOpacity(0.3),
+        blurRadius: 4,
+        offset: const Offset(0, 2),
+      ),
+    ],
+  ),
+  child: Padding(
+    padding: EdgeInsets.all(isWeb ? 16.0 : 10.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        // Pagination Section - Wrap with Expanded
+        Expanded(
+          flex: 1,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                onPressed: _goToPreviousPage,
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  color: const Color(0xFF008080),
+                  size: isWeb ? 22 : 18,
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      // Pagination
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            IconButton(
-                              onPressed: _goToPreviousPage,
-                              icon: const Icon(Icons.arrow_back_ios, color: Color(0xFF008080)),
-                            ),
-                            Text(
-                              'Page ${currentPage + 1} of $totalPages',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF008080),
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: _goToNextPage,
-                              icon: const Icon(Icons.arrow_forward_ios, color: Color(0xFF008080)),
-                            ),
-                          ],
-                        ),
-                      ),
-                      
-                      // Submit Button
-                      ElevatedButton(
-                        onPressed: _submitAttendance,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF008080),
-                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                        ),
-                        child: const Text(
-                          'Submit Attendance',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ],
+                padding: EdgeInsets.zero, // Reduce padding
+                constraints: const BoxConstraints(minWidth: 36), // Minimum tap area
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  '${currentPage + 1}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF008080),
                   ),
                 ),
               ),
+              IconButton(
+                onPressed: _goToNextPage,
+                icon: Icon(
+                  Icons.arrow_forward_ios,
+                  color: const Color(0xFF008080),
+                  size: isWeb ? 22 : 18,
+                ),
+                padding: EdgeInsets.zero, // Reduce padding
+                constraints: const BoxConstraints(minWidth: 36), // Minimum tap area
+              ),
             ],
+          ),
+        ),
+
+        // Submit Button - Wrap with Expanded and make text responsive
+        Expanded(
+          flex: 1,
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: ElevatedButton(
+                onPressed: _submitAttendance,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF008080),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isWeb ? 16 : 12,
+                    vertical: isWeb ? 12 : 10,
+                  ),
+                  minimumSize: Size.zero, // Remove minimum size constraint
+                ),
+                child: const Text(
+                  'Submit',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12, // Smaller font for mobile
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  ),
+),
+],
           ),
         ),
       ),
     );
   }
 
-  // Widget _buildClassHeader(String className) {
-  //   return Text(
-  //     className,
-  //     style: const TextStyle(
-  //       color: Colors.white,
-  //       fontWeight: FontWeight.bold,
-  //       fontSize: 14,
-  //     ),
-  //   );
-  // }
-
-  Widget _buildStudentRow(int studentIndex, int displayNumber) {
+  Widget _buildStudentRow(int studentIndex, int displayNumber, bool isWeb) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: EdgeInsets.only(bottom: isWeb ? 12 : 8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -405,17 +443,20 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+        padding: EdgeInsets.symmetric(
+            vertical: isWeb ? 16.0 : 12.0, horizontal: isWeb ? 20 : 16.0),
         child: Row(
           children: [
             // Student Number and Name
             Expanded(
               flex: 2,
-              child: Text(
+              child: AutoSizeText(
                 '$displayNumber. Student ${studentIndex + 1}',
+                maxLines: 1,
+                minFontSize: 10,
+                maxFontSize: isWeb ? 16 : 14,
                 style: const TextStyle(
                   fontWeight: FontWeight.w500,
-                  fontSize: 14,
                 ),
               ),
             ),
@@ -423,13 +464,18 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
             // Attendance Checkboxes
             Expanded(
               flex: 3,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildAttendanceCheckbox(studentIndex, 0, 'P', 'Present'),
-                  _buildAttendanceCheckbox(studentIndex, 1, 'L', 'Late'),
-                  _buildAttendanceCheckbox(studentIndex, 2, 'A', 'Absent'),
-                ],
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    _buildAttendanceCheckbox(
+                        studentIndex, 0, 'P', 'Present', isWeb),
+                    _buildAttendanceCheckbox(
+                        studentIndex, 1, 'L', 'Late', isWeb),
+                    _buildAttendanceCheckbox(
+                        studentIndex, 2, 'A', 'Absent', isWeb),
+                  ],
+                ),
               ),
             ),
           ],
@@ -438,20 +484,24 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     );
   }
 
-  Widget _buildAttendanceCheckbox(int studentIndex, int attendanceIndex, String label, String type) {
+  Widget _buildAttendanceCheckbox(
+      int studentIndex, int attendanceIndex, String label, String type, bool isWeb) {
     return GestureDetector(
       onTap: () {
         setState(() {
-          // Uncheck all other options for this student
           for (int i = 0; i < 3; i++) {
             attendanceData[studentIndex][i] = (i == attendanceIndex);
           }
         });
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        margin: EdgeInsets.only(right: 8),
+        padding: EdgeInsets.symmetric(
+            horizontal: isWeb ? 14 : 12, vertical: isWeb ? 8 : 6),
         decoration: BoxDecoration(
-          color: attendanceData[studentIndex][attendanceIndex] ? _getCheckboxColor(type) : Colors.transparent,
+          color: attendanceData[studentIndex][attendanceIndex]
+              ? _getCheckboxColor(type)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: _getCheckboxColor(type),
@@ -462,17 +512,25 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              attendanceData[studentIndex][attendanceIndex] ? Icons.check : Icons.check_box_outline_blank,
-              size: 16,
-              color: attendanceData[studentIndex][attendanceIndex] ? Colors.white : _getCheckboxColor(type),
+              attendanceData[studentIndex][attendanceIndex]
+                  ? Icons.check
+                  : Icons.check_box_outline_blank,
+              size: isWeb ? 18 : 16,
+              color: attendanceData[studentIndex][attendanceIndex]
+                  ? Colors.white
+                  : _getCheckboxColor(type),
             ),
-            const SizedBox(width: 4),
-            Text(
+            SizedBox(width: isWeb ? 6 : 4),
+            AutoSizeText(
               label,
+              maxLines: 1,
+              minFontSize: 10,
+              maxFontSize: isWeb ? 16 : 12,
               style: TextStyle(
-                color: attendanceData[studentIndex][attendanceIndex] ? Colors.white : _getCheckboxColor(type),
+                color: attendanceData[studentIndex][attendanceIndex]
+                    ? Colors.white
+                    : _getCheckboxColor(type),
                 fontWeight: FontWeight.bold,
-                fontSize: 12,
               ),
             ),
           ],

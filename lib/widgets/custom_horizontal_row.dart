@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class CustomHorizontalRow extends StatelessWidget {
@@ -7,8 +8,8 @@ class CustomHorizontalRow extends StatelessWidget {
 
   // Single color combination for all containers
   static const List<Color> gradientColors = [
-    Color(0xFF1CB5E0), // teal
-    Color(0xFF0A3D62), // navy
+    Color(0xFF1CB5E0),
+    Color(0xFF0A3D62),
   ];
 
   const CustomHorizontalRow({
@@ -24,23 +25,24 @@ class CustomHorizontalRow extends StatelessWidget {
     final double avatarRadius = isWeb ? 35 : 28;
     final double nameFontSize = isWeb ? 15 : 13;
     final double subjectFontSize = isWeb ? 13 : 11;
-    final double titleFontSize = isWeb ? 20: 14;
+    final double titleFontSize = isWeb ? 20 : 14;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          AutoSizeText(
             title,
             style: TextStyle(
               fontSize: titleFontSize,
               color: Colors.black87,
               fontWeight: FontWeight.w600,
             ),
+            maxLines: 1,
+            minFontSize: 10,
           ),
           const SizedBox(height: 10),
-
           SizedBox(
             height: cardSize + 15,
             child: ListView.separated(
@@ -49,7 +51,7 @@ class CustomHorizontalRow extends StatelessWidget {
               separatorBuilder: (context, index) => const SizedBox(width: 12),
               itemBuilder: (context, index) {
                 final item = items[index];
-                
+
                 return Container(
                   width: cardSize,
                   padding: const EdgeInsets.all(10),
@@ -61,9 +63,6 @@ class CustomHorizontalRow extends StatelessWidget {
                     ),
                     borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(25),
-                      topLeft: Radius.circular(0),
-                      bottomLeft: Radius.circular(0),
-                      bottomRight: Radius.circular(0),
                     ),
                     boxShadow: [
                       BoxShadow(
@@ -85,10 +84,8 @@ class CustomHorizontalRow extends StatelessWidget {
                             : const AssetImage('assets/default_teacher.jpg'),
                         backgroundColor: Colors.white24,
                       ),
-
                       const SizedBox(height: 8),
-
-                      Text(
+                      AutoSizeText(
                         item['name'] ?? '',
                         style: TextStyle(
                           color: Colors.white,
@@ -97,12 +94,10 @@ class CustomHorizontalRow extends StatelessWidget {
                         ),
                         textAlign: TextAlign.center,
                         maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        minFontSize: 8,
                       ),
-
                       const SizedBox(height: 4),
-
-                      Text(
+                      AutoSizeText(
                         item['subject'] ?? '',
                         style: TextStyle(
                           color: Colors.white70,
@@ -110,7 +105,7 @@ class CustomHorizontalRow extends StatelessWidget {
                         ),
                         textAlign: TextAlign.center,
                         maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        minFontSize: 8,
                       ),
                     ],
                   ),
@@ -124,17 +119,13 @@ class CustomHorizontalRow extends StatelessWidget {
   }
 }
 
-
-
+// ---------------- Custom Text Row ----------------
 class CustomTextRow extends StatelessWidget {
   final String title;
   final List<Map<String, String>> items;
   final bool isWeb;
 
-  // Single color combination for all containers
   static const List<Color> gradientColors = [
-    // Color(0xFF00B286), 
-    // Color(0xFF00B2A9), 
     Color(0xFFf1c27d),
     Color(0xFFc68642)
   ];
@@ -157,25 +148,26 @@ class CustomTextRow extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          AutoSizeText(
             title,
             style: TextStyle(
               fontSize: titleFontSize,
               color: Colors.black87,
               fontWeight: FontWeight.w600,
             ),
+            maxLines: 1,
+            minFontSize: 10,
           ),
           const SizedBox(height: 10),
-
           SizedBox(
-            height: cardSize + 15, // Increased height for multiple lines
+            height: cardSize + 15,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: items.length,
               separatorBuilder: (context, index) => const SizedBox(width: 12),
               itemBuilder: (context, index) {
                 final item = items[index];
-                
+
                 return Container(
                   width: cardSize,
                   padding: const EdgeInsets.all(12),
@@ -187,9 +179,6 @@ class CustomTextRow extends StatelessWidget {
                     ),
                     borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(25),
-                      topLeft: Radius.circular(0),
-                      bottomLeft: Radius.circular(0),
-                      bottomRight: Radius.circular(0),
                     ),
                     boxShadow: [
                       BoxShadow(
@@ -200,27 +189,20 @@ class CustomTextRow extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Fixed text display with proper constraints
-                      Expanded(
-                        child: SingleChildScrollView(
-                          physics: const BouncingScrollPhysics(),
-                          child: Text(
-                            item['text'] ?? '',
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w600,
-                              fontSize: nameFontSize - 1, // Slightly smaller font
-                              height: 1.3, // Better line height
-                            ),
-                            textAlign: TextAlign.center,
-                            softWrap: true,
-                          ),
-                        ),
+                  child: Center(
+                    child: AutoSizeText(
+                      item['text'] ?? '',
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w600,
+                        fontSize: nameFontSize - 1,
+                        height: 1.3,
                       ),
-                    ],
+                      textAlign: TextAlign.center,
+                      maxLines: 5,
+                      minFontSize: 8,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 );
               },
@@ -231,3 +213,5 @@ class CustomTextRow extends StatelessWidget {
     );
   }
 }
+
+ 
