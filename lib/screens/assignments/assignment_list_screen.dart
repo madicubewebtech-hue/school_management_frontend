@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:school_management_frontend/screens/assignments/create_assignment_screen.dart';
+import 'package:school_management_frontend/theme/app_colors.dart';
+import 'package:school_management_frontend/widgets/bottom_navbar.dart';
+import 'package:school_management_frontend/widgets/navigation.dart';
 import 'assignment_widgets.dart';
 
 class AssignmentListScreen extends StatefulWidget {
@@ -17,6 +20,16 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
+        leading: IconButton(
+          color: Colors.white,
+          icon: const Icon(Icons.arrow_back_ios_outlined),
+          onPressed: () {
+          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => BottomNavbar()),
+                            );
+          },
+        ),
         title: const Text(
           'Assignment',
           style: TextStyle(
@@ -24,7 +37,7 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.green,
         elevation: 0,
         centerTitle: true,
       ),
@@ -56,7 +69,7 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
             ),
           );
         },
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.green,
         child: const Icon(Icons.add, color: Colors.white),
       ),
     );
@@ -69,7 +82,7 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Row(
           children: [
-            const Icon(Icons.assignment, color: Colors.green, size: 24),
+            const Icon(Icons.assignment, color: AppColors.green, size: 24),
             const SizedBox(width: 12),
             const Text(
               'Assignment',
@@ -92,7 +105,7 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
               icon: const Icon(Icons.add, size: 16),
               label: const Text('Create Assignment'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
+                backgroundColor: AppColors.green,
                 foregroundColor: Colors.white,
               ),
             ),

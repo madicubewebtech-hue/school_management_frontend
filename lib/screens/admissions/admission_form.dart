@@ -5,6 +5,8 @@ import 'package:school_management_frontend/screens/admissions/adm_widgets/paymen
 import 'package:school_management_frontend/screens/admissions/adm_widgets/text_widgets.dart';
 import 'package:school_management_frontend/screens/admissions/adm_widgets/widgets.dart';
 import 'package:school_management_frontend/theme/app_colors.dart';
+import 'package:school_management_frontend/widgets/bottom_navbar.dart';
+import 'package:school_management_frontend/widgets/navigation.dart';
 
 
 class AdmissionForm extends StatefulWidget {
@@ -46,6 +48,16 @@ class _AdmissionFormState extends State<AdmissionForm> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 204, 255, 247),
       appBar: AppBar(
+         leading: IconButton(
+          color: Colors.white,
+          icon: const Icon(Icons.arrow_back_ios_outlined),
+          onPressed: () {
+          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => BottomNavbar()),
+                            );
+          },
+        ),
         title: const Text(
           'Add New Student',
           style: TextStyle(

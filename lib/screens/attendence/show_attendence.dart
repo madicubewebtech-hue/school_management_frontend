@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:school_management_frontend/theme/app_colors.dart';
+import 'package:school_management_frontend/widgets/bottom_navbar.dart';
+import 'package:school_management_frontend/widgets/navigation.dart';
 
 class MonthlyAttendanceReportScreen extends StatefulWidget {
   const MonthlyAttendanceReportScreen({super.key});
@@ -107,6 +109,8 @@ class _MonthlyAttendanceReportScreenState
     };
   }
 
+   
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -115,6 +119,16 @@ class _MonthlyAttendanceReportScreenState
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+         leading: IconButton(
+          color: Colors.white,
+          icon: const Icon(Icons.arrow_back_ios_outlined),
+          onPressed: () {
+          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => BottomNavbar()),
+                            );
+          },
+        ),
         title: const AutoSizeText(
           'Demo Public School',
           maxLines: 1,

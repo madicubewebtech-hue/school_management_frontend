@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:school_management_frontend/screens/assignments/assignment_list_screen.dart';
+import 'package:school_management_frontend/theme/app_colors.dart';
 import 'assignment_widgets.dart';
 
 class CreateAssignmentScreen extends StatefulWidget {
@@ -24,6 +26,16 @@ class _CreateAssignmentScreenState extends State<CreateAssignmentScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
+        leading: IconButton(
+          color: Colors.white,
+          icon: const Icon(Icons.arrow_back_ios_outlined),
+          onPressed: () {
+          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => AssignmentListScreen()),
+                            );
+          },
+        ),
         title: const Text(
           'Create Assignment',
           style: TextStyle(
@@ -31,13 +43,10 @@ class _CreateAssignmentScreenState extends State<CreateAssignmentScreen> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.green,
         elevation: 0,
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
+        
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
