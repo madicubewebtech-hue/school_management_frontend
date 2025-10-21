@@ -30,7 +30,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
               children: [
                 // ---------------- HEADER ----------------
                 Container(
-                  height: isWeb ? screenHeight * 0.18 : screenHeight * 0.14,
+                  height: isWeb ? screenHeight * 0.24 : screenHeight * 0.24,
                   width: double.infinity,
                   color: AppColors.green,
                   padding: EdgeInsets.only(
@@ -39,7 +39,8 @@ class _StudentDashboardState extends State<StudentDashboard> {
                     top: isWeb ? 30 : 24,
                     bottom: 8,
                   ),
-                  child: Align(
+                  child: 
+                  Align(
                     alignment: Alignment.topLeft,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -152,8 +153,8 @@ class _StudentDashboardState extends State<StudentDashboard> {
               ],
             ),
 
-            // ✅ Added more space so that "Class Incharge" starts properly below the card
-            SizedBox(height: isWeb ? screenHeight * 0.18 : screenHeight * 0.20),
+            
+            SizedBox(height: isWeb ? screenHeight * 0.14 : screenHeight * 0.14),
 
             // ---------------- CLASS INCHARGE ----------------
             CustomHorizontalRow(

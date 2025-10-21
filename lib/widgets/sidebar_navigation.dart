@@ -3,9 +3,12 @@ import 'package:school_management_frontend/screens/admissions/admission_form.dar
 import 'package:school_management_frontend/screens/assignments/assignment_list_screen.dart';
 import 'package:school_management_frontend/screens/bottom_screens.dart/student_dashboard.dart';
 import 'package:school_management_frontend/screens/attendence/attendence.dart';
+import 'package:school_management_frontend/screens/sidebar_screens/syllabus.dart';
+import 'package:school_management_frontend/screens/sidebar_screens/teachers.dart';
+import 'package:school_management_frontend/screens/sidebar_screens/timetable.dart';
 import 'package:school_management_frontend/theme/app_colors.dart';
 import 'package:school_management_frontend/widgets/bottom_navbar.dart';
-import 'package:school_management_frontend/widgets/navigation.dart';
+
 
 class SidebarNavigation extends StatelessWidget {
   SidebarNavigation({super.key});
@@ -15,7 +18,7 @@ class SidebarNavigation extends StatelessWidget {
     {
       'title': 'Know Your Teacher',
       'icon': Icons.person,
-      'page': const BottomNavbar(),
+      'page': const KnowYourTeachersScreen(),
       'color': Colors.blue
     },
     {
@@ -27,13 +30,13 @@ class SidebarNavigation extends StatelessWidget {
     {
       'title': 'Timetable',
       'icon': Icons.schedule,
-      'page': const BottomNavbar(),
+      'page': const TimetableScreen(),
       'color': Colors.orange
     },
     {
       'title': 'Syllabus',
       'icon': Icons.menu_book,
-      'page': const StudentDashboard(),
+      'page': const SyllabusScreen(),
       'color': Colors.purple
     },
     {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:school_management_frontend/screens/assignments/assignment_list_screen.dart';
 import 'package:school_management_frontend/theme/app_colors.dart';
-import 'assignment_widgets.dart';
+
 
 class CreateAssignmentScreen extends StatefulWidget {
   const CreateAssignmentScreen({super.key});
@@ -16,13 +15,16 @@ class _CreateAssignmentScreenState extends State<CreateAssignmentScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _dueDateController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
-  
+
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   bool _shareAssignment = true;
 
   @override
   Widget build(BuildContext context) {
+    final isWeb = MediaQuery.of(context).size.width > 600;
+    final screenPadding = isWeb ? EdgeInsets.symmetric(horizontal: 80, vertical: 20) : const EdgeInsets.all(16);
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -30,42 +32,28 @@ class _CreateAssignmentScreenState extends State<CreateAssignmentScreen> {
           color: Colors.white,
           icon: const Icon(Icons.arrow_back_ios_outlined),
           onPressed: () {
-          Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => AssignmentListScreen()),
-                            );
+            Navigator.pop(context);
           },
         ),
         title: const Text(
           'Create Assignment',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         backgroundColor: AppColors.green,
         elevation: 0,
         centerTitle: true,
-        
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              _buildHeaderSection(),
-              const SizedBox(height: 24),
-              
-              // Form
-              _buildAssignmentForm(),
-              const SizedBox(height: 24),
-              
-              // Submit Button
-              _buildSubmitButton(),
-            ],
-          ),
+      body: SingleChildScrollView(
+        padding: screenPadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeaderSection(),
+            const SizedBox(height: 24),
+            _buildFormFields(isWeb),
+            const SizedBox(height: 24),
+            _buildSubmitButton(isWeb),
+          ],
         ),
       ),
     );
@@ -77,177 +65,125 @@ class _CreateAssignmentScreenState extends State<CreateAssignmentScreen> {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
-          children: [
-            const Icon(Icons.assignment_add, color: Colors.green, size: 24),
-            const SizedBox(width: 12),
-            const Text(
-              'Create Assignment',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
+          children: const [
+            Icon(Icons.assignment_add, color: Colors.green, size: 24),
+            SizedBox(width: 12),
+            Text('Create Assignment', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87)),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildAssignmentForm() {
+  Widget _buildFormFields(bool isWeb) {
     return Card(
       elevation: 2,
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Class Section
-            AssignmentFormField(
-              label: 'Class Section',
-              isRequired: true,
-              child: TextField(
-                controller: _classSectionController,
-                decoration: const InputDecoration(
-                  hintText: 'Select class section',
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                ),
-              ),
-            ),
-            
-            // Topic Name
-            AssignmentFormField(
-              label: 'Topic Name',
-              isRequired: true,
-              child: TextField(
-                controller: _topicNameController,
-                decoration: const InputDecoration(
-                  hintText: 'Enter topic name',
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                ),
-              ),
-            ),
-            
-            // Assignment Description
-            AssignmentFormField(
-              label: 'Assignment Description',
-              isRequired: true,
-              child: TextField(
-                controller: _descriptionController,
-                maxLines: 4,
-                decoration: const InputDecoration(
-                  hintText: 'Enter assignment description',
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                ),
-              ),
-            ),
-            
-            // Due Date and Time Row
+            _formField('Class Section', controller: _classSectionController, isRequired: true, hintText: 'Select class section'),
+            _formField('Topic Name', controller: _topicNameController, isRequired: true, hintText: 'Enter topic name'),
+            _formField('Assignment Description', controller: _descriptionController, isRequired: true, hintText: 'Enter assignment description', maxLines: 4),
             Row(
               children: [
-                // Due Date
-                Expanded(
-                  child: AssignmentFormField(
-                    label: 'Due Date',
-                    isRequired: true,
-                    child: TextField(
-                      controller: _dueDateController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        hintText: 'Select due date',
-                        border: const OutlineInputBorder(),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.calendar_today),
-                          onPressed: _selectDate,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                Expanded(child: _formField('Due Date', controller: _dueDateController, isRequired: true, hintText: 'Select due date', readOnly: true, onTap: _selectDate)),
                 const SizedBox(width: 16),
-                
-                // Time
-                Expanded(
-                  child: AssignmentFormField(
-                    label: 'Time',
-                    isRequired: true,
-                    child: TextField(
-                      controller: _timeController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        hintText: 'Select time',
-                        border: const OutlineInputBorder(),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.access_time),
-                          onPressed: _selectTime,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                Expanded(child: _formField('Time', controller: _timeController, isRequired: true, hintText: 'Select time', readOnly: true, onTap: _selectTime)),
               ],
             ),
-            
-            // Attachment
-            AssignmentFormField(
-              label: 'Attachment',
-              child:  AttachmentBox(
-                onTap: () {
-                  // Handle attachment selection
-                },
-              ),
-            ),
-            
-            // Share Assignment Checkbox
-            AssignmentCheckboxField(
-              label: 'Share Assignment',
-              value: _shareAssignment,
-              onChanged: (value) {
-                setState(() {
-                  _shareAssignment = value ?? false;
-                });
-              },
-            ),
+            _attachmentBox(),
+            _checkboxField('Share Assignment', _shareAssignment, (val) => setState(() => _shareAssignment = val ?? false)),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSubmitButton() {
+  Widget _formField(String label,
+      {required TextEditingController controller, bool isRequired = false, String? hintText, int maxLines = 1, bool readOnly = false, VoidCallback? onTap}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black87)),
+              if (isRequired) const Text('*', style: TextStyle(color: Colors.red, fontSize: 14)),
+            ],
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: controller,
+            maxLines: maxLines,
+            readOnly: readOnly,
+            onTap: onTap,
+            decoration: InputDecoration(
+              hintText: hintText,
+              border: const OutlineInputBorder(),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              suffixIcon: readOnly && onTap != null ? IconButton(icon: Icon(label == 'Time' ? Icons.access_time : Icons.calendar_today), onPressed: onTap) : null,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _attachmentBox() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: GestureDetector(
+        onTap: () {},
+        child: Container(
+          height: 80,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.withOpacity(0.3)),
+            borderRadius: BorderRadius.circular(8),
+            color: Colors.grey.withOpacity(0.05),
+          ),
+          child: const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [Icon(Icons.attach_file, color: Colors.grey, size: 24), SizedBox(height: 4), Text('Add Attachment', style: TextStyle(color: Colors.grey, fontSize: 12))],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _checkboxField(String label, bool value, ValueChanged<bool?> onChanged) {
+    return Row(
+      children: [
+        Checkbox(value: value, onChanged: onChanged, activeColor: Colors.green),
+        const SizedBox(width: 8),
+        Text(label, style: const TextStyle(fontSize: 14, color: Colors.black87)),
+      ],
+    );
+  }
+
+  Widget _buildSubmitButton(bool isWeb) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: _createAssignment,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.green,
+          backgroundColor: AppColors.green,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
-        child: const Text(
-          'Create Assignment',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
+        child: const Text('Create Assignment', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
       ),
     );
   }
 
   Future<void> _selectDate() async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(2100),
-    );
-    if (picked != null && picked != _selectedDate) {
+    final DateTime? picked = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now(), lastDate: DateTime(2100));
+    if (picked != null) {
       setState(() {
         _selectedDate = picked;
         _dueDateController.text = "${picked.day}/${picked.month}/${picked.year}";
@@ -256,10 +192,7 @@ class _CreateAssignmentScreenState extends State<CreateAssignmentScreen> {
   }
 
   Future<void> _selectTime() async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
+    final TimeOfDay? picked = await showTimePicker(context: context, initialTime: TimeOfDay.now());
     if (picked != null) {
       setState(() {
         _selectedTime = picked;
@@ -274,21 +207,12 @@ class _CreateAssignmentScreenState extends State<CreateAssignmentScreen> {
         _descriptionController.text.isEmpty ||
         _dueDateController.text.isEmpty ||
         _timeController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all required fields')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please fill all required fields')));
       return;
     }
 
-    // Handle assignment creation
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Assignment created successfully')),
-    );
-    
-    // Navigate back after success
-    Future.delayed(const Duration(seconds: 1), () {
-      Navigator.pop(context);
-    });
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Assignment created successfully')));
+    Future.delayed(const Duration(seconds: 1), () => Navigator.pop(context));
   }
 
   @override

@@ -1,16 +1,16 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:school_management_frontend/screens/admissions/admission_form.dart';
-import 'package:school_management_frontend/screens/assignments/assignment_list_screen.dart';
-import 'package:school_management_frontend/screens/attendence/attendence.dart';
+import 'package:school_management_frontend/main.dart';
+
 import 'package:school_management_frontend/screens/bottom_screens.dart/chat.dart';
+import 'package:school_management_frontend/screens/bottom_screens.dart/home.dart';
 import 'package:school_management_frontend/screens/bottom_screens.dart/notification.dart';
 import 'package:school_management_frontend/screens/bottom_screens.dart/profile.dart';
 import 'package:school_management_frontend/screens/bottom_screens.dart/student_dashboard.dart';
+
 import 'package:school_management_frontend/screens/bottom_screens.dart/timetable.dart';
 import 'package:school_management_frontend/theme/app_colors.dart';
 
-import 'package:school_management_frontend/widgets/sidebar_navigation.dart';
 
 class BottomNavbar extends StatefulWidget {
   const BottomNavbar({super.key});
@@ -48,6 +48,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
         child: CurvedNavigationBar(
           backgroundColor: Colors.transparent,
           color: AppColors.green,
+          //Colors.teal.shade200,
           index: _selectedIndex,
           animationDuration: const Duration(milliseconds: 300),
           onTap: (index) {

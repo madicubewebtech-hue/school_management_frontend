@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:school_management_frontend/screens/auth/login.dart';
+import 'package:school_management_frontend/screens/responsive/desktop_scaffold.dart';
+import 'package:school_management_frontend/screens/responsive/mobile_scaffold.dart';
+import 'package:school_management_frontend/screens/responsive/responsive_layout.dart';
+import 'package:school_management_frontend/screens/responsive/tablet_scaffold.dart';
 
 
 
@@ -19,7 +23,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.purple,
         useMaterial3: true,
       ),
-      home: const  LoginScreen(),
+      //home: const  LoginScreen(),
+      home: ResponsiveLayout(
+        mobileScaffold: const MobileScaffold(),
+        tabletScaffold: const TabletScaffold(),
+        desktopScaffold: const DesktopScaffold(),
+      ),
     );
   }
 }
