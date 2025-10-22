@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:school_management_frontend/screens/assignments/create_assignment_screen.dart';
 import 'package:school_management_frontend/theme/app_colors.dart';
-import 'package:school_management_frontend/widgets/bottom_navbar.dart';
 import 'assignment_widgets.dart';
 
 // ----------------- Assignment List Screen -----------------
@@ -33,7 +32,7 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
           color: Colors.white,
           icon: const Icon(Icons.arrow_back_ios_outlined),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const BottomNavbar()));
+            Navigator.pop(context);
           },
         ),
         title: const Text('Assignments',

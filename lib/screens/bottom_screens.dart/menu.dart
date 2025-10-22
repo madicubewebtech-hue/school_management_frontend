@@ -3,7 +3,8 @@ import 'package:school_management_frontend/screens/admissions/admission_form.dar
 import 'package:school_management_frontend/screens/assignments/assignment_list_screen.dart';
 import 'package:school_management_frontend/screens/bottom_screens.dart/student_dashboard.dart';
 import 'package:school_management_frontend/screens/attendence/attendence.dart';
-import 'package:school_management_frontend/widgets/bottom_navbar.dart';
+import 'package:school_management_frontend/screens/bottom_screens.dart/notification.dart';
+import 'package:school_management_frontend/screens/bottom_screens.dart/timetable.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -18,7 +19,7 @@ class _MenuScreenState extends State<MenuScreen> {
     {
       'title': 'Know Your Teacher',
       'icon': Icons.person,
-      'page': const BottomNavbar(),
+      'page': const StudentDashboard(),
     },
     {
       'title': 'Assignment',
@@ -28,7 +29,7 @@ class _MenuScreenState extends State<MenuScreen> {
     {
       'title': 'Timetable',
       'icon': Icons.schedule,
-      'page': const BottomNavbar(),
+      'page': const Timetable(),
     },
     {
       'title': 'Syllabus',
@@ -38,7 +39,7 @@ class _MenuScreenState extends State<MenuScreen> {
     {
       'title': 'Announcements',
       'icon': Icons.announcement,
-      'page': const BottomNavbar(),
+      'page': const NotificationScreen(),
     },
     {
       'title': 'Fee',
@@ -53,12 +54,12 @@ class _MenuScreenState extends State<MenuScreen> {
     {
       'title': 'Calendar',
       'icon': Icons.calendar_month,
-      'page': const BottomNavbar(),
+      'page': const StudentDashboard(),
     },
     {
       'title': 'Transport',
       'icon': Icons.directions_bus,
-      'page': const BottomNavbar(),
+      'page': const StudentDashboard(),
     },
     {
       'title': 'Admissions',
@@ -68,12 +69,12 @@ class _MenuScreenState extends State<MenuScreen> {
     {
       'title': 'Library',
       'icon': Icons.library_books,
-      'page': const BottomNavbar(),
+      'page': const StudentDashboard(),
     },
     {
       'title': 'Reports',
       'icon': Icons.analytics,
-      'page': const BottomNavbar(),
+      'page': const StudentDashboard(),
     },
   ];
 

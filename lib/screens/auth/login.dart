@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:school_management_frontend/widgets/bottom_navbar.dart';
-import 'package:school_management_frontend/widgets/navigation.dart';
+import 'package:school_management_frontend/screens/responsive/bottom_nav_screen.dart';
 import 'package:school_management_frontend/screens/teachers/teacher_dashboard.dart';
 import 'package:school_management_frontend/theme/app_colors.dart';
 
@@ -260,9 +259,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             print("School Code: ${_schoolCodeController.text}");
                             print("Email: ${_emailController.text}");
                             print("Password: ${_passwordController.text}");
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(builder: (context) => BottomNavbar()),
+                              MaterialPageRoute(builder: (context) => const BottomNavScreen()),
                             );
                           },
                           style: ElevatedButton.styleFrom(
