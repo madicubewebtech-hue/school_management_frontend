@@ -135,15 +135,10 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           color: Colors.white,
           icon: const Icon(Icons.arrow_back_ios_outlined),
           onPressed: () {
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BottomNavbar(
-                  currentIndex: 2,
-                  onIndexChanged: (index) {},
-                ),
-              ),
-            );
+          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => BottomNavbar()),
+                            );
           },
         ),
         title: AutoSizeText(

@@ -20,12 +20,13 @@ class ContainerListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color themeColor = Colors.teal;
     final double screenWidth = MediaQuery.of(context).size.width;
-    final bool isTablet = screenWidth >= 600;
+    final bool isTablet = screenWidth >= 600; // simple tablet breakpoint
 
     return Container(
-      constraints: BoxConstraints(
-        maxHeight: maxHeight ?? (isTablet ? 140 : 120),
-      ),
+      // Allow parent to pass a maxHeight, otherwise use tablet heuristic
+      constraints: maxHeight != null
+          ? BoxConstraints(maxHeight: maxHeight!)
+          : (isTablet ? const BoxConstraints(maxHeight: 140) : null),
       alignment: Alignment.topLeft,
       decoration: BoxDecoration(
         color: themeColor.withOpacity(0.1),
@@ -40,52 +41,58 @@ class ContainerListWidget extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: EdgeInsets.all(isTablet ? 10 : 8),
+        padding: EdgeInsets.all(isTablet ? 10 : 12),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.min, // Shrink to fit content
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
                   ),
-                  const SizedBox(height: 4),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 6),
                 
-                  Text(
-                    subject,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[700],
-                      fontWeight: FontWeight.w500,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                // Subject
+                Text(
+                  subject,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[700],
+                    fontWeight: FontWeight.w500,
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    'Due: $dueDate',
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Colors.teal[700],
-                      fontWeight: FontWeight.w500,
-                    ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                
+                // Due date
+                Text(
+                  'Due: $dueDate',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.teal[700],
+                    fontWeight: FontWeight.w500,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const SizedBox(height: 4),
+
+            // Status at bottom - sized to content
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
               decoration: BoxDecoration(
                 color: isCompleted
                     ? Colors.greenAccent.withOpacity(0.2)

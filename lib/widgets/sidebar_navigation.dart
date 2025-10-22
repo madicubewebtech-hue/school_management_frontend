@@ -3,7 +3,6 @@ import 'package:school_management_frontend/screens/admissions/admission_form.dar
 import 'package:school_management_frontend/screens/assignments/assignment_list_screen.dart';
 import 'package:school_management_frontend/screens/bottom_screens.dart/student_dashboard.dart';
 import 'package:school_management_frontend/screens/attendence/attendence.dart';
-import 'package:school_management_frontend/screens/bottom_screens.dart/notification.dart';
 import 'package:school_management_frontend/screens/sidebar_screens/syllabus.dart';
 import 'package:school_management_frontend/screens/sidebar_screens/teachers.dart';
 import 'package:school_management_frontend/screens/sidebar_screens/timetable.dart';
@@ -12,9 +11,7 @@ import 'package:school_management_frontend/widgets/bottom_navbar.dart';
 
 
 class SidebarNavigation extends StatelessWidget {
-  final bool asDrawer;
-
-  SidebarNavigation({super.key, this.asDrawer = true});
+  SidebarNavigation({super.key});
 
   // Drawer items with titles, icons, and the corresponding pages
   final List<Map<String, dynamic>> _drawerItems = [
@@ -45,7 +42,7 @@ class SidebarNavigation extends StatelessWidget {
     {
       'title': 'Announcements',
       'icon': Icons.announcement,
-      'page': const NotificationScreen(),
+      'page': const BottomNavbar(),
       'color': Colors.blue
     },
     {
@@ -63,13 +60,13 @@ class SidebarNavigation extends StatelessWidget {
     {
       'title': 'Calendar',
       'icon': Icons.calendar_month,
-      'page': const StudentDashboard(),
+      'page': const BottomNavbar(),
       'color': Colors.indigo
     },
     {
       'title': 'Transport',
       'icon': Icons.directions_bus,
-      'page': const StudentDashboard(),
+      'page': const BottomNavbar(),
       'color': Colors.brown
     },
      {
@@ -81,71 +78,23 @@ class SidebarNavigation extends StatelessWidget {
     {
       'title': 'Library',
       'icon': Icons.library_books,
-      'page': const StudentDashboard(),
+      'page': const BottomNavbar(),
       'color': Colors.pink
     },
     {
       'title': 'Reports',
       'icon': Icons.analytics,
-      'page': const StudentDashboard(),
+      'page': const BottomNavbar(),
       'color': Colors.cyan
     },
   ];
 
   void _handleNavigation(BuildContext context, Widget page) {
     Navigator.pop(context); // close drawer
-    
-    // If the page is StudentDashboard or NotificationScreen, navigate to BottomNavbar with appropriate index
-    if (page is StudentDashboard) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => BottomNavbar(
-            currentIndex: 2,
-            onIndexChanged: (index) {
-              if (index != 2) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BottomNavbar(
-                      currentIndex: index,
-                      onIndexChanged: (index) {},
-                    ),
-                  ),
-                );
-              }
-            },
-          ),
-        ),
-      );
-    } else if (page is NotificationScreen) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => BottomNavbar(
-            currentIndex: 3,
-            onIndexChanged: (index) {
-              if (index != 3) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BottomNavbar(
-                      currentIndex: index,
-                      onIndexChanged: (index) {},
-                    ),
-                  ),
-                );
-              }
-            },
-          ),
-        ),
-      );
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => page),
-      );
-    }
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => page),
+    );
   }
 
   void _handleLogout(BuildContext context) {
@@ -177,7 +126,16 @@ class SidebarNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Widget content = Container(
+    return Drawer(
+      width: 280,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(25),
+          bottomRight: Radius.circular(25),
+        ),
+      ),
+      elevation: 10,
+      child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -197,27 +155,10 @@ class SidebarNavigation extends StatelessWidget {
             _buildDrawerHeader(),
             const SizedBox(height: 8),
             Expanded(child: _buildNavigationItems(context)),
+            _buildLogoutSection(context),
           ],
         ),
-    );
-
-    if (asDrawer) {
-      return Drawer(
-        width: 280,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(25),
-            bottomRight: Radius.circular(25),
-          ),
-        ),
-        elevation: 10,
-        child: content,
-      );
-    }
-
-    return ConstrainedBox(
-      constraints: const BoxConstraints.tightFor(width: 280),
-      child: content,
+      ),
     );
   }
 
@@ -295,54 +236,51 @@ class SidebarNavigation extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: ListView.builder(
         padding: const EdgeInsets.only(top: 8),
-        itemCount: _drawerItems.length + 1, // add 1 for logout
+        itemCount: _drawerItems.length,
         itemBuilder: (context, index) {
-          if (index < _drawerItems.length) {
-            final item = _drawerItems[index];
-            return Container(
-              margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () => _handleNavigation(context, item['page']),
-                  borderRadius: BorderRadius.circular(12),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: Colors.transparent,
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: item['color'].withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Icon(item['icon'], color: item['color'], size: 20),
+          final item = _drawerItems[index];
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => _handleNavigation(context, item['page']),
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.transparent,
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: item['color'].withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            item['title'],
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.grey[700]),
-                          ),
+                        child: Icon(item['icon'], color: item['color'], size: 20),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          item['title'],
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey[700]),
                         ),
-                        Icon(Icons.chevron_right, color: Colors.grey[400], size: 18),
-                      ],
-                    ),
+                      ),
+                      Icon(Icons.chevron_right,
+                          color: Colors.grey[400], size: 18),
+                    ],
                   ),
                 ),
               ),
-            );
-          }
-
-          // logout item at the end
-          return _buildLogoutSection(context);
+            ),
+          );
         },
       ),
     );
