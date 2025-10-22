@@ -23,12 +23,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.purple,
         useMaterial3: true,
       ),
-      //home: const  LoginScreen(),
-      home: ResponsiveLayout(
-        mobileScaffold: const MobileScaffold(),
-        tabletScaffold: const TabletScaffold(),
-        desktopScaffold: const DesktopScaffold(),
-      ),
+      home: const  LoginScreen(),
+      // home: ResponsiveLayout(
+      //   mobileScaffold: const MobileScaffold(),
+      //   tabletScaffold: const TabletScaffold(),
+      //   desktopScaffold: const DesktopScaffold(),
+      // ),
     );
   }
 }

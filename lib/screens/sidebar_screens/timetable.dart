@@ -64,10 +64,15 @@ class TimetableScreen extends StatelessWidget {
           color: Colors.white,
           icon: const Icon(Icons.arrow_back_ios_outlined),
           onPressed: () {
-          Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => BottomNavbar()),
-                            );
+           Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BottomNavbar(
+                  currentIndex: 2,
+                  onIndexChanged: (index) {},
+                ),
+              ),
+            );
           },
         ),
         title: const Text('Class Timetable', style: TextStyle(color: Colors.white)),
