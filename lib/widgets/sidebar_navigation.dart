@@ -1,19 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:school_management_frontend/new/student_dashboard.dart';
+
 import 'package:school_management_frontend/screens/admissions/admission_form.dart';
+import 'package:school_management_frontend/screens/announcement..dart';
 import 'package:school_management_frontend/screens/assignments/assignment_list_screen.dart';
-import 'package:school_management_frontend/screens/bottom_screens.dart/student_dashboard.dart';
+
+import 'package:school_management_frontend/screens/bottom_screens.dart/notification.dart';
+
 import 'package:school_management_frontend/screens/attendence/attendence.dart';
+import 'package:school_management_frontend/screens/bottom_screens.dart/profile.dart';
+import 'package:school_management_frontend/screens/calender.dart';
+import 'package:school_management_frontend/screens/fee.dart';
+import 'package:school_management_frontend/screens/library.dart';
+import 'package:school_management_frontend/screens/reports.dart';
 import 'package:school_management_frontend/screens/sidebar_screens/syllabus.dart';
 import 'package:school_management_frontend/screens/sidebar_screens/teachers.dart';
 import 'package:school_management_frontend/screens/sidebar_screens/timetable.dart';
+import 'package:school_management_frontend/screens/transport.dart';
 import 'package:school_management_frontend/theme/app_colors.dart';
-import 'package:school_management_frontend/widgets/bottom_navbar.dart';
 
 
-class SidebarNavigation extends StatelessWidget {
-  SidebarNavigation({super.key});
+class SidebarNavigation extends StatefulWidget {
+  final Function(Widget)? onDesktopItemSelected;
+  
+  SidebarNavigation({super.key, this.onDesktopItemSelected});
 
+  @override
+  State<SidebarNavigation> createState() => _SidebarNavigationState();
+}
+
+class _SidebarNavigationState extends State<SidebarNavigation> {
   // Drawer items with titles, icons, and the corresponding pages
   final List<Map<String, dynamic>> _drawerItems = [
     {
@@ -40,16 +55,23 @@ class SidebarNavigation extends StatelessWidget {
       'page': const SyllabusScreen(),
       'color': Colors.purple
     },
+    
+     {
+      'title': 'Notifications',
+      'icon': Icons.announcement,
+      'page': const NotificationScreen(),
+      'color': Colors.green
+    },
     {
       'title': 'Announcements',
       'icon': Icons.announcement,
-      'page': const BottomNavbar(),
+      'page': const Announcement(),
       'color': Colors.blue
     },
     {
       'title': 'Fee',
       'icon': Icons.payment,
-      'page':  BottomNavbar(),
+      'page': Fees_Screen(),
       'color': Colors.red
     },
     {
@@ -61,13 +83,13 @@ class SidebarNavigation extends StatelessWidget {
     {
       'title': 'Calendar',
       'icon': Icons.calendar_month,
-      'page': const BottomNavbar(),
+      'page': const Calender(),
       'color': Colors.indigo
     },
     {
       'title': 'Transport',
       'icon': Icons.directions_bus,
-      'page': const BottomNavbar(),
+      'page': const Transport(),
       'color': Colors.brown
     },
      {
@@ -79,23 +101,32 @@ class SidebarNavigation extends StatelessWidget {
     {
       'title': 'Library',
       'icon': Icons.library_books,
-      'page': const BottomNavbar(),
+      'page': const Library(),
       'color': Colors.pink
     },
     {
       'title': 'Reports',
       'icon': Icons.analytics,
-      'page': const BottomNavbar(),
+      'page': const Reports(),
       'color': Colors.cyan
     },
   ];
 
   void _handleNavigation(BuildContext context, Widget page) {
-    Navigator.pop(context); // close drawer
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => page),
-    );
+    final bool isDesktop = MediaQuery.of(context).size.width >= 1000;
+    
+    if (isDesktop && widget.onDesktopItemSelected != null) {
+      // For desktop: update the body content
+      widget.onDesktopItemSelected!(page);
+      Navigator.pop(context); // close drawer
+    } else {
+      // For mobile/tablet: navigate to new page (existing behavior)
+      Navigator.pop(context); // close drawer
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => page),
+      );
+    }
   }
 
   void _handleLogout(BuildContext context) {
@@ -204,7 +235,7 @@ class SidebarNavigation extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children:  [
                   Text(
                     'Rahul Sharma',
                     style: TextStyle(
@@ -223,9 +254,36 @@ class SidebarNavigation extends StatelessWidget {
                     'Roll No: 25',
                     style: TextStyle(fontSize: 10, color: Colors.white),
                   ),
+                   
+                 
                 ],
               ),
             ),
+           Container(
+  width: 25,
+  height: 25,
+  decoration: BoxDecoration(
+    shape: BoxShape.circle,
+    gradient: const LinearGradient(
+      colors: [Colors.white, Colors.white70],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+  ),
+  child: Center(
+    child: GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+      },
+      child: const Icon(
+        Icons.edit,
+        size: 16,
+        color: AppColors.green,
+      ),
+    ),
+  ),
+)
+
           ],
         ),
       ),

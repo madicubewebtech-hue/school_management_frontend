@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:school_management_frontend/theme/app_colors.dart';
 import 'package:school_management_frontend/widgets/bottom_navbar.dart';
-import 'package:school_management_frontend/widgets/navigation.dart';
+import 'package:school_management_frontend/new/chat_list_screen.dart';
 import 'package:school_management_frontend/widgets/sidebar_navigation.dart';
 
 class AttendanceScreen extends StatefulWidget {
@@ -46,9 +46,6 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       (index) => startIndex + index,
     );
   }
-
-  // GlobalKey for Scaffold to open drawer
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -121,24 +118,30 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final bool isWeb = screenWidth > 800;
-
-    return Scaffold(
     
+    // Responsive logic
+    if (screenWidth < 500) {
+      return _buildMobileLayout(context);
+    } else if (screenWidth < 1000) {
+      return _buildTabletLayout(context);
+    } else {
+      return _buildDesktopLayout(context);
+    }
+  }
+
+  // Mobile Layout
+  Widget _buildMobileLayout(BuildContext context) {
+    return Scaffold(
       backgroundColor: Colors.white,
-      drawer: SizedBox(
-        width: 280, // fixed sidebar width
-       
-      ),
       appBar: AppBar(
         leading: IconButton(
           color: Colors.white,
           icon: const Icon(Icons.arrow_back_ios_outlined),
           onPressed: () {
-          Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => BottomNavbar()),
-                            );
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const BottomNavbar()),
+            );
           },
         ),
         title: AutoSizeText(
@@ -154,43 +157,140 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
         backgroundColor: AppColors.green,
         elevation: 0,
       ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFFE0F2F1),
-              Color(0xFFB2DFDB),
-              Color(0xFF80CBC4),
-            ],
+      body: _buildAttendanceContent(),
+    );
+  }
+
+  // Tablet Layout
+  Widget _buildTabletLayout(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        leading: IconButton(
+          color: Colors.white,
+          icon: const Icon(Icons.arrow_back_ios_outlined),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const BottomNavbar()),
+            );
+          },
+        ),
+        title: AutoSizeText(
+          'Demo Public School',
+          maxLines: 1,
+          minFontSize: 14,
+          maxFontSize: 22,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        child: Padding(
-          padding: EdgeInsets.all(isWeb ? 24.0 : 16.0),
-          child: Column(
-            children: [
-              // Header with Date and Class Selection
-              _buildHeader(isWeb),
-              const SizedBox(height: 16),
-              _buildTableHeader(isWeb),
-              const SizedBox(height: 8),
-              // Student List
-              Expanded(
-                child: ListView.builder(
-                  itemCount: currentStudentIndices.length,
-                  itemBuilder: (context, index) {
-                    final studentIndex = currentStudentIndices[index];
-                    return _buildStudentRow(studentIndex, index + 1, isWeb);
-                  },
-                ),
+        backgroundColor: AppColors.green,
+        elevation: 0,
+      ),
+      body: _buildAttendanceContent(),
+    );
+  }
+
+  // Desktop Layout
+  Widget _buildDesktopLayout(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Row(
+          children: [
+            // Left Sidebar
+            Expanded(
+              flex: 1,
+              child: SidebarNavigation(),
+            ),
+
+            // Main Content
+            Expanded(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Desktop Header
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    child: const Row(
+                      children: [
+                        Text(
+                          'Attendance',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.green,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  // Attendance Content
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: _buildAttendanceContent(isDesktop: true),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              _buildBottomBar(isWeb),
-            ],
-          ),
+            ),
+
+            // Right Sidebar
+            Expanded(
+              flex: 1,
+              child: ChatListScreen(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Common Attendance Content
+  Widget _buildAttendanceContent({bool isDesktop = false}) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isWeb = screenWidth > 800;
+
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color(0xFFE0F2F1),
+            Color(0xFFB2DFDB),
+            Color(0xFF80CBC4),
+          ],
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(isDesktop ? 24.0 : 16.0),
+        child: Column(
+          children: [
+            // Header with Date and Class Selection
+            _buildHeader(isWeb),
+            const SizedBox(height: 16),
+            _buildTableHeader(isWeb),
+            const SizedBox(height: 8),
+            // Student List
+            Expanded(
+              child: ListView.builder(
+                itemCount: currentStudentIndices.length,
+                itemBuilder: (context, index) {
+                  final studentIndex = currentStudentIndices[index];
+                  return _buildStudentRow(studentIndex, index + 1, isWeb);
+                },
+              ),
+            ),
+            const SizedBox(height: 16),
+            _buildBottomBar(isWeb),
+          ],
         ),
       ),
     );

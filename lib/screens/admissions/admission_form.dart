@@ -6,8 +6,8 @@ import 'package:school_management_frontend/screens/admissions/adm_widgets/text_w
 import 'package:school_management_frontend/screens/admissions/adm_widgets/widgets.dart';
 import 'package:school_management_frontend/theme/app_colors.dart';
 import 'package:school_management_frontend/widgets/bottom_navbar.dart';
-import 'package:school_management_frontend/widgets/navigation.dart';
-
+import 'package:school_management_frontend/new/chat_list_screen.dart';
+import 'package:school_management_frontend/widgets/sidebar_navigation.dart';
 
 class AdmissionForm extends StatefulWidget {
   const AdmissionForm({super.key});
@@ -43,19 +43,31 @@ class _AdmissionFormState extends State<AdmissionForm> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isMobile = MediaQuery.of(context).size.width < 768;
+    final screenWidth = MediaQuery.of(context).size.width;
     
+    // Responsive logic
+    if (screenWidth < 500) {
+      return _buildMobileLayout(context);
+    } else if (screenWidth < 1000) {
+      return _buildTabletLayout(context);
+    } else {
+      return _buildDesktopLayout(context);
+    }
+  }
+
+  // Mobile Layout
+  Widget _buildMobileLayout(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 204, 255, 247),
       appBar: AppBar(
-         leading: IconButton(
+        leading: IconButton(
           color: Colors.white,
           icon: const Icon(Icons.arrow_back_ios_outlined),
           onPressed: () {
-          Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => BottomNavbar()),
-                            );
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const BottomNavbar()),
+            );
           },
         ),
         title: const Text(
@@ -69,94 +81,184 @@ class _AdmissionFormState extends State<AdmissionForm> {
         elevation: 0,
         centerTitle: true,
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: isMobile ? _buildMobileView() : _buildWebView(),
+      body: _buildMobileView(),
+    );
+  }
+
+  // Tablet Layout
+  Widget _buildTabletLayout(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 204, 255, 247),
+      appBar: AppBar(
+        leading: IconButton(
+          color: Colors.white,
+          icon: const Icon(Icons.arrow_back_ios_outlined),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const BottomNavbar()),
+            );
+          },
+        ),
+        title: const Text(
+          'Add New Student',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
+        ),
+        backgroundColor: AppColors.green,
+        elevation: 0,
+        centerTitle: true,
+      ),
+      body: _buildMobileView(),
+    );
+  }
+
+  // Desktop Layout
+  Widget _buildDesktopLayout(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Row(
+          children: [
+            // Left Sidebar
+            Expanded(
+              flex: 1,
+              child: SidebarNavigation(),
+            ),
+
+            // Main Content
+            Expanded(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Desktop Header
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    child: const Row(
+                      children: [
+                        Text(
+                          'Add New Student',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.green,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  // Admission Form Content
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: _buildWebView(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Right Sidebar
+            Expanded(
+              flex: 1,
+              child: ChatListScreen(),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildMobileView() {
-    return Column(
-      children: [
-        // Progress indicator
-        AdmissionProgressIndicator(currentPage: _currentPage),
-        const SizedBox(height: 24),
-        
-        // Page view for forms
-        Expanded(
-          child: PageView(
-            controller: _pageController,
-            physics: const NeverScrollableScrollPhysics(),
-            onPageChanged: (int page) {
-              setState(() {
-                _currentPage = page;
-              });
-            },
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
             children: [
-              _buildStudentDetailsMobile(),
-              _buildParentDetailsMobile(),
-              _buildPaymentAndSubmitMobile(),
+              // Progress indicator
+              AdmissionProgressIndicator(currentPage: _currentPage),
+              const SizedBox(height: 24),
+              
+              // Page view for forms
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  onPageChanged: (int page) {
+                    setState(() {
+                      _currentPage = page;
+                    });
+                  },
+                  children: [
+                    _buildStudentDetailsMobile(),
+                    _buildParentDetailsMobile(),
+                    _buildPaymentAndSubmitMobile(),
+                  ],
+                ),
+              ),
+              
+              // Navigation buttons
+              AdmissionMobileNavigationButtons(
+                currentPage: _currentPage,
+                pageController: _pageController,
+                onSubmit: _submitForm,
+              ),
             ],
           ),
         ),
-        
-        // Navigation buttons
-        AdmissionMobileNavigationButtons(
-          currentPage: _currentPage,
-          pageController: _pageController,
-          onSubmit: _submitForm,
-        ),
-      ],
+      ),
     );
   }
 
   Widget _buildWebView() {
     return SingleChildScrollView(
-      child: Center(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 1200),
-          child: Column(
-            children: [
-              // Student Details Card
-              AdmissionWebCard(
-                title: 'Student Details',
-                child: _buildStudentDetailsWeb(),
-              ),
-              
-              const SizedBox(height: 24),
-              
-              // Parent Details Card
-              AdmissionWebCard(
-                title: 'Parent Details',
-                child: _buildParentDetailsWeb(),
-              ),
-              
-              const SizedBox(height: 24),
-              
-              // Payment Card
-              AdmissionWebCard(
-                title: 'Payments',
-                child: AdmissionPaymentSection(
-                  selectedValue: _paymentMethod,
-                  onChanged: (value) {
-                    setState(() {
-                      _paymentMethod = value;
-                    });
-                  },
+      child: Form(
+        key: _formKey,
+        child: Center(
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 1200),
+            child: Column(
+              children: [
+                // Student Details Card
+                AdmissionWebCard(
+                  title: 'Student Details',
+                  child: _buildStudentDetailsWeb(),
                 ),
-              ),
-              
-              const SizedBox(height: 32),
-              
-              // Submit Button
-              AdmissionSubmitButton(onPressed: _submitForm),
-            ],
+                
+                const SizedBox(height: 24),
+                
+                // Parent Details Card
+                AdmissionWebCard(
+                  title: 'Parent Details',
+                  child: _buildParentDetailsWeb(),
+                ),
+                
+                const SizedBox(height: 24),
+                
+                // Payment Card
+                AdmissionWebCard(
+                  title: 'Payments',
+                  child: AdmissionPaymentSection(
+                    selectedValue: _paymentMethod,
+                    onChanged: (value) {
+                      setState(() {
+                        _paymentMethod = value;
+                      });
+                    },
+                  ),
+                ),
+                
+                const SizedBox(height: 32),
+                
+                // Submit Button
+                AdmissionSubmitButton(onPressed: _submitForm),
+              ],
+            ),
           ),
         ),
       ),

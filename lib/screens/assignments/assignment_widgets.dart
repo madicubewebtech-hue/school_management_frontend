@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
 // ----------------- Assignment Card -----------------
+// assignment_widgets.dart में AssignmentCard को ऐसा बनाएं:
 class AssignmentCard extends StatelessWidget {
-
-
   final String title;
   final String subject;
   final String date;
@@ -12,150 +11,76 @@ class AssignmentCard extends StatelessWidget {
   final VoidCallback onDelete;
 
   const AssignmentCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.subject,
     required this.date,
     required this.hasAttachment,
     required this.onView,
     required this.onDelete,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Title
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
+    return Card(
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0), // Reduced padding
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min, // ADD THIS
+          children: [
+            // Title
+            Text(
+              title,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14, // Reduced font size
+              ),
+              maxLines: 2, // ADD THIS
+              overflow: TextOverflow.ellipsis, // ADD THIS
             ),
-            softWrap: true,
-          ),
-          const SizedBox(height: 6),
-          // Subject & Date Row
-          Row(
-            children: [
-              Row(
-                children: [
-                  const Icon(Icons.book, size: 16, color: Colors.grey),
-                  const SizedBox(width: 4),
-                  Text(
-                    subject,
-                    style: const TextStyle(color: Colors.grey),
-                    softWrap: true,
-                  ),
-                ],
+            const SizedBox(height: 8),
+            
+            // Subject
+            Text(
+              'Subject: $subject',
+              style: TextStyle(
+                fontSize: 12, // Reduced font size
+                color: Colors.grey[600],
               ),
-              const SizedBox(width: 12),
-              Row(
-                children: [
-                  const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
-                  const SizedBox(width: 4),
-                  Text(
-                    date,
-                    style: const TextStyle(color: Colors.grey),
-                    softWrap: true,
-                  ),
-                ],
+            ),
+            const SizedBox(height: 4),
+            
+            // Date
+            Text(
+              'Due: $date',
+              style: TextStyle(
+                fontSize: 12, // Reduced font size
+                color: Colors.grey[600],
               ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          // Attachment if available
-          if (hasAttachment)
+            ),
+            const SizedBox(height: 8),
+            
+            // Attachment & Buttons
             Row(
-              children: const [
-                Icon(Icons.attachment, size: 16, color: Colors.grey),
-                SizedBox(width: 4),
-                Text(
-                  'Attachment',
-                  style: TextStyle(color: Colors.grey),
+              children: [
+                if (hasAttachment)
+                  Icon(Icons.attach_file, size: 16, color: Colors.green),
+                const Spacer(),
+                IconButton(
+                  icon: Icon(Icons.visibility, size: 18),
+                  onPressed: onView,
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete, size: 18, color: Colors.red),
+                  onPressed: onDelete,
                 ),
               ],
             ),
-          if (hasAttachment) const SizedBox(height: 8),
-          // Buttons Row
-          Row(
-            children: [
-              Expanded(
-                child: InkWell(
-                  onTap: onView,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.green.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: Colors.green),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.visibility, size: 14, color: Colors.green),
-                        SizedBox(width: 4),
-                        Text(
-                          'View',
-                          style: TextStyle(
-                              color: Colors.green,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 12),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: InkWell(
-                  onTap: onDelete,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.red.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(color: Colors.red),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.delete, size: 14, color: Colors.red),
-                        SizedBox(width: 4),
-                        Text(
-                          'Delete',
-                          style: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 12),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
-

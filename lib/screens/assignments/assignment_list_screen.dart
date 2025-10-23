@@ -3,6 +3,8 @@ import 'package:school_management_frontend/screens/assignments/create_assignment
 import 'package:school_management_frontend/theme/app_colors.dart';
 import 'package:school_management_frontend/widgets/bottom_navbar.dart';
 import 'assignment_widgets.dart';
+import 'package:school_management_frontend/new/chat_list_screen.dart';
+import 'package:school_management_frontend/widgets/sidebar_navigation.dart';
 
 // ----------------- Assignment List Screen -----------------
 class AssignmentListScreen extends StatefulWidget {
@@ -24,8 +26,20 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isWeb = MediaQuery.of(context).size.width > 600;
+    final screenWidth = MediaQuery.of(context).size.width;
+    
+    // Responsive logic
+    if (screenWidth < 500) {
+      return _buildMobileLayout();
+    } else if (screenWidth < 1000) {
+      return _buildTabletLayout();
+    } else {
+      return _buildDesktopLayout();
+    }
+  }
 
+  // Mobile Layout
+  Widget _buildMobileLayout() {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -42,45 +56,163 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
         elevation: 0,
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
+      body: _buildAssignmentContent(),
+      floatingActionButton: _buildFloatingActionButton(),
+    );
+  }
+
+  // Tablet Layout
+  Widget _buildTabletLayout() {
+    return Scaffold(
+      backgroundColor: Colors.grey[50],
+      appBar: AppBar(
+        leading: IconButton(
+          color: Colors.white,
+          icon: const Icon(Icons.arrow_back_ios_outlined),
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const BottomNavbar()));
+          },
+        ),
+        title: const Text('Assignments',
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        backgroundColor: AppColors.green,
+        elevation: 0,
+        centerTitle: true,
+      ),
+      body: _buildAssignmentContent(),
+      floatingActionButton: _buildFloatingActionButton(),
+    );
+  }
+
+  // Desktop Layout - FIXED
+  Widget _buildDesktopLayout() {
+    return Scaffold(
+      body: SafeArea(
+        child: Row(
           children: [
-            // Assignment Grid
+            // Left Sidebar
             Expanded(
-              child: GridView.builder(
-                itemCount: assignments.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: isWeb ? 3 : 1,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 1.7,
-                ),
-                itemBuilder: (context, index) {
-                  final assignment = assignments[index];
-                  return AssignmentCard(
-                    title: assignment['title'],
-                    subject: assignment['subject'],
-                    date: assignment['date'],
-                    hasAttachment: assignment['hasAttachment'],
-                    onView: () => _showViewDialog(assignment),
-                    onDelete: () => _showDeleteDialog(assignment),
-                  );
-                },
+              flex: 1,
+              child: SidebarNavigation(),
+            ),
+
+            // Main Content - FIXED: SingleChildScrollView को Column के बाहर ले जाएं
+            Expanded(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Desktop Header
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    child: Row(
+                      children: [
+                       
+                        const Text(
+                          'Assignments',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.green,
+                          ),
+                        ),
+                        const Spacer(),
+                        _buildFloatingActionButton(),
+                      ],
+                    ),
+                  ),
+                  
+                  // Assignment Grid - FIXED: Expanded के अंदर
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: _buildAssignmentGrid(isDesktop: true),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 20),
+
+            // Right Sidebar
+            Expanded(
+              flex: 1,
+              child: ChatListScreen(),
+            ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const CreateAssignmentScreen()));
-        },
-        backgroundColor: AppColors.green,
-        child: const Icon(Icons.add, color: Colors.white),
+    );
+  }
+
+  // Common Assignment Content
+  Widget _buildAssignmentContent() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          // Assignment Grid - FIXED: Expanded के अंदर
+          Expanded(
+            child: _buildAssignmentGrid(),
+          ),
+          const SizedBox(height: 20),
+        ],
       ),
+    );
+  }
+
+  // Assignment Grid Builder - FIXED
+  Widget _buildAssignmentGrid({bool isDesktop = false}) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    int crossAxisCount;
+    double childAspectRatio;
+
+    if (screenWidth < 600) {
+      // Mobile
+      crossAxisCount = 1;
+      childAspectRatio = 1.3; // Reduced from 1.7
+    } else if (screenWidth < 1200) {
+      // Tablet
+      crossAxisCount = 2;
+      childAspectRatio = 1.2; // Reduced from 1.7
+    } else {
+      // Desktop
+      crossAxisCount = 3;
+      childAspectRatio = 1.0; // Reduced from 1.5
+    }
+
+    return GridView.builder(
+      shrinkWrap: true, // ADD THIS
+      physics: const AlwaysScrollableScrollPhysics(), // CHANGED THIS
+      itemCount: assignments.length,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: crossAxisCount,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        childAspectRatio: childAspectRatio,
+      ),
+      itemBuilder: (context, index) {
+        final assignment = assignments[index];
+        return AssignmentCard(
+          title: assignment['title'],
+          subject: assignment['subject'],
+          date: assignment['date'],
+          hasAttachment: assignment['hasAttachment'],
+          onView: () => _showViewDialog(assignment),
+          onDelete: () => _showDeleteDialog(assignment),
+        );
+      },
+    );
+  }
+
+  // Floating Action Button
+  Widget _buildFloatingActionButton() {
+    return FloatingActionButton(
+      onPressed: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const CreateAssignmentScreen()));
+      },
+      backgroundColor: AppColors.green,
+      child: const Icon(Icons.add, color: Colors.white),
     );
   }
 

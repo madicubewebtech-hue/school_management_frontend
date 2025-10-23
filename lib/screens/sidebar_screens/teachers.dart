@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:school_management_frontend/theme/app_colors.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:school_management_frontend/widgets/bottom_navbar.dart';
+import 'package:school_management_frontend/new/chat_list_screen.dart';
+import 'package:school_management_frontend/widgets/sidebar_navigation.dart';
 
-class KnowYourTeachersScreen extends StatelessWidget {
+class KnowYourTeachersScreen extends StatefulWidget {
   const KnowYourTeachersScreen({super.key});
 
+  @override
+  State<KnowYourTeachersScreen> createState() => _KnowYourTeachersScreenState();
+}
+
+class _KnowYourTeachersScreenState extends State<KnowYourTeachersScreen> {
   // Dummy data for teachers
   final List<Map<String, String>> teachers = const [
     {
@@ -38,7 +45,7 @@ class KnowYourTeachersScreen extends StatelessWidget {
       'subject': 'Geography',
       'image': 'assets/teacher2.jpg',
     },
-     {
+    {
       'name': 'Mr. Amit Verma',
       'subject': 'English',
       'image': 'assets/teacher3.jpg',
@@ -52,131 +59,263 @@ class KnowYourTeachersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isWeb = MediaQuery.of(context).size.width > 600;
+    final screenWidth = MediaQuery.of(context).size.width;
+    
+    // Responsive logic
+    if (screenWidth < 500) {
+      return _buildMobileLayout(context);
+    } else if (screenWidth < 1000) {
+      return _buildTabletLayout(context);
+    } else {
+      return _buildDesktopLayout(context);
+    }
+  }
 
+  // Mobile Layout
+  Widget _buildMobileLayout(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        
         backgroundColor: AppColors.green,
-                leading: IconButton(
+        leading: IconButton(
           color: Colors.white,
           icon: const Icon(Icons.arrow_back_ios_outlined),
           onPressed: () {
-          Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => BottomNavbar()),
-                            );
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const BottomNavbar()),
+            );
           },
         ),
-    
         title: const Text(
           "Know Your Teachers",
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
       ),
-      
+      body: _buildTeachersContent(),
+    );
+  }
+
+  // Tablet Layout
+  Widget _buildTabletLayout(BuildContext context) {
+    return Scaffold(
       backgroundColor: Colors.grey[100],
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: _TeachersGrid(teachers: teachers, isWeb: isWeb),
+      appBar: AppBar(
+        backgroundColor: AppColors.green,
+        leading: IconButton(
+          color: Colors.white,
+          icon: const Icon(Icons.arrow_back_ios_outlined),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const BottomNavbar()),
+            );
+          },
+        ),
+        title: const Text(
+          "Know Your Teachers",
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
+      ),
+      body: _buildTeachersContent(),
+    );
+  }
+
+  // Desktop Layout
+  Widget _buildDesktopLayout(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Row(
+          children: [
+            // Left Sidebar
+            Expanded(
+              flex: 1,
+              child: SidebarNavigation(),
+            ),
+
+            // Main Content
+            Expanded(
+              flex: 3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Desktop Header
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    child: const Row(
+                      children: [
+                        Text(
+                          'Know Your Teachers',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.green,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  // Teachers Grid
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: _buildTeachersGrid(isDesktop: true),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Right Sidebar
+            Expanded(
+              flex: 1,
+              child: ChatListScreen(),
+            ),
+          ],
+        ),
       ),
     );
   }
-}
 
-// ---------------- Grid Widget ----------------
-class _TeachersGrid extends StatelessWidget {
-  final List<Map<String, String>> teachers;
-  final bool isWeb;
+  // Common Teachers Content
+  Widget _buildTeachersContent() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: _buildTeachersGrid(),
+    );
+  }
 
-  static const List<Color> gradientColors = [
-    Color(0xFF1CB5E0),
-    Color(0xFF0A3D62),
-  ];
+  // Teachers Grid Builder
+  Widget _buildTeachersGrid({bool isDesktop = false}) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    
+    int crossAxisCount;
+    double childAspectRatio;
+    double avatarRadius;
+    double nameFontSize;
+    double subjectFontSize;
+    double padding;
 
-  const _TeachersGrid({
-    required this.teachers,
-    required this.isWeb,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final double avatarRadius = isWeb ? 38 : 32;
-    final double nameFontSize = isWeb ? 16 : 14;
-    final double subjectFontSize = isWeb ? 13 : 11;
+    if (screenWidth < 500) {
+      // Mobile
+      crossAxisCount = 2;
+      childAspectRatio = 0.95;
+      avatarRadius = 32;
+      nameFontSize = 14;
+      subjectFontSize = 11;
+      padding = 10;
+    } else if (screenWidth < 1000) {
+      // Tablet
+      crossAxisCount = 3;
+      childAspectRatio = 1.0;
+      avatarRadius = 36;
+      nameFontSize = 15;
+      subjectFontSize = 12;
+      padding = 12;
+    } else {
+      // Desktop
+      crossAxisCount = 4;
+      childAspectRatio = 1.1;
+      avatarRadius = 38;
+      nameFontSize = 16;
+      subjectFontSize = 13;
+      padding = 14;
+    }
 
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: teachers.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: isWeb ? 3 : 2, // 2 for mobile, 3 for web/tablet
+        crossAxisCount: crossAxisCount,
         crossAxisSpacing: 14,
         mainAxisSpacing: 14,
-        childAspectRatio: isWeb ? 1 : 0.95,
+        childAspectRatio: childAspectRatio,
       ),
       itemBuilder: (context, index) {
         final teacher = teachers[index];
-        return Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: gradientColors,
-            ),
-            borderRadius: const BorderRadius.only(
-              topRight: Radius.circular(25),
-              bottomLeft: Radius.circular(10),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: gradientColors[1].withOpacity(0.4),
-                blurRadius: 8,
-                spreadRadius: 2,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                radius: avatarRadius,
-                backgroundImage: teacher['image'] != null &&
-                        teacher['image']!.isNotEmpty
-                    ? AssetImage(teacher['image']!)
-                    : const AssetImage('assets/default_teacher.jpg'),
-                backgroundColor: Colors.white24,
-              ),
-              const SizedBox(height: 8),
-              AutoSizeText(
-                teacher['name'] ?? '',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: nameFontSize,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                minFontSize: 8,
-              ),
-              const SizedBox(height: 4),
-              AutoSizeText(
-                teacher['subject'] ?? '',
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: subjectFontSize,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                minFontSize: 8,
-              ),
-            ],
-          ),
+        return _buildTeacherCard(
+          teacher: teacher,
+          avatarRadius: avatarRadius,
+          nameFontSize: nameFontSize,
+          subjectFontSize: subjectFontSize,
+          padding: padding,
         );
       },
+    );
+  }
+
+  // Teacher Card Widget
+  Widget _buildTeacherCard({
+    required Map<String, String> teacher,
+    required double avatarRadius,
+    required double nameFontSize,
+    required double subjectFontSize,
+    required double padding,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(padding),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF1CB5E0),
+            Color(0xFF0A3D62),
+          ],
+        ),
+        borderRadius: const BorderRadius.only(
+          topRight: Radius.circular(25),
+          bottomLeft: Radius.circular(10),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF0A3D62).withOpacity(0.4),
+            blurRadius: 8,
+            spreadRadius: 2,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            radius: avatarRadius,
+            backgroundImage: teacher['image'] != null &&
+                    teacher['image']!.isNotEmpty
+                ? AssetImage(teacher['image']!)
+                : const AssetImage('assets/default_teacher.jpg') as ImageProvider,
+            backgroundColor: Colors.white24,
+          ),
+          const SizedBox(height: 8),
+          AutoSizeText(
+            teacher['name'] ?? '',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: nameFontSize,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            minFontSize: 8,
+          ),
+          const SizedBox(height: 4),
+          AutoSizeText(
+            teacher['subject'] ?? '',
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: subjectFontSize,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            minFontSize: 8,
+          ),
+        ],
+      ),
     );
   }
 }

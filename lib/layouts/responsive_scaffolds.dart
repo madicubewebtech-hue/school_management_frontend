@@ -13,7 +13,7 @@ class ResponsiveScaffolds {
   }) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(title, style: TextStyle(color: Colors.white),),
         backgroundColor: AppColors.green,
         actions: actions,
       ),
@@ -200,12 +200,12 @@ class ResponsiveScaffolds {
         double childAspectRatio;
         double spacing;
 
-        if (screenWidth < 600) {
+        if (screenWidth < 500) {
           // Mobile
           crossAxisCount = 2;
           childAspectRatio = 0.9;
           spacing = 12.0;
-        } else if (screenWidth < 1200) {
+        } else if (screenWidth < 1000) {
           // Tablet
           crossAxisCount = 2;
           childAspectRatio = 1.3;
