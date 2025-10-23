@@ -176,28 +176,23 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                       const SizedBox(height: 16),
 
                       // Grid View for Assignments - Fixed height
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: assignments.length,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          crossAxisSpacing: 16,
-                          mainAxisSpacing: 16,
-                          childAspectRatio: 1.1, // Better aspect ratio for desktop
-                        ),
-                        itemBuilder: (context, index) {
-                          final assignment = assignments[index];
-                          return ContainerListWidget(
-                            title: assignment['title'],
-                            subject: assignment['subject'],
-                            dueDate: assignment['dueDate'],
-                            isCompleted: assignment['isCompleted'],
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 32),
-
+  // FIXED GridView for Desktop
+// In DesktopScaffold, update the GridView to:
+GridView.builder(
+  shrinkWrap: true,
+  physics: const NeverScrollableScrollPhysics(),
+  itemCount: assignments.length,
+  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    crossAxisCount: 3, // 3 columns for desktop
+    crossAxisSpacing: 20,
+    mainAxisSpacing: 20,
+    childAspectRatio: 1.5,
+  ),
+  itemBuilder: (context, index) {
+    final assignment = assignments[index];
+    return _buildAssignmentCard(assignment); // Same card widget as tablet
+  },
+),
                       // Messages Section
                       Text(
                         'Messages',
@@ -286,3 +281,107 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
     );
   }
 }
+
+
+  Widget _buildAssignmentCard(Map<String, dynamic> assignment) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        border: Border.all(
+          color: AppColors.green.withOpacity(0.2),
+          width: 1,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Subject and Status
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: AppColors.green.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    assignment['subject'],
+                    style: TextStyle(
+                      color: AppColors.green,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: assignment['isCompleted'] 
+                        ? Colors.green.withOpacity(0.1)
+                        : Colors.orange.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    assignment['isCompleted'] ? 'Done' : 'Pending',
+                    style: TextStyle(
+                      color: assignment['isCompleted'] ? Colors.green : Colors.orange,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            // Title
+            Text(
+              assignment['title'],
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+
+            const Spacer(),
+
+            // Due Date
+            Row(
+              children: [
+                Icon(
+                  Icons.calendar_today,
+                  size: 16,
+                  color: Colors.grey[600],
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Due: ${assignment['dueDate']}',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }

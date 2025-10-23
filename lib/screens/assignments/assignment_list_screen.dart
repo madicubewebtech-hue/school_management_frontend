@@ -46,34 +46,7 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Search
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.grey.withOpacity(0.3)),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.search, color: Colors.grey, size: 20),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: TextField(
-                      controller: _searchController,
-                      decoration: const InputDecoration(
-                        hintText: 'Search assignments...',
-                        border: InputBorder.none,
-                        hintStyle: TextStyle(color: Colors.grey),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Grid
+            // Assignment Grid
             Expanded(
               child: GridView.builder(
                 itemCount: assignments.length,
@@ -81,7 +54,7 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
                   crossAxisCount: isWeb ? 3 : 1,
                   crossAxisSpacing: 12,
                   mainAxisSpacing: 12,
-                  childAspectRatio: 3 / 2, // dynamic enough for content
+                  childAspectRatio: 1.7,
                 ),
                 itemBuilder: (context, index) {
                   final assignment = assignments[index];
@@ -96,6 +69,7 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
                 },
               ),
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),

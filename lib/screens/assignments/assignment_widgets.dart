@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:school_management_frontend/screens/assignments/create_assignment_screen.dart';
-import 'package:school_management_frontend/theme/app_colors.dart';
-import 'package:school_management_frontend/widgets/bottom_navbar.dart';
 
 // ----------------- Assignment Card -----------------
 class AssignmentCard extends StatelessWidget {
+
+
   final String title;
   final String subject;
   final String date;
@@ -13,14 +12,14 @@ class AssignmentCard extends StatelessWidget {
   final VoidCallback onDelete;
 
   const AssignmentCard({
-    super.key,
+    Key? key,
     required this.title,
     required this.subject,
     required this.date,
     required this.hasAttachment,
     required this.onView,
     required this.onDelete,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +35,10 @@ class AssignmentCard extends StatelessWidget {
             offset: const Offset(0, 2),
           ),
         ],
-        border: Border.all(color: Colors.grey.withOpacity(0.2)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min, // Adjusts height based on content
+        mainAxisSize: MainAxisSize.min,
         children: [
           // Title
           Text(
@@ -50,9 +48,9 @@ class AssignmentCard extends StatelessWidget {
               fontWeight: FontWeight.bold,
               color: Colors.black87,
             ),
+            softWrap: true,
           ),
           const SizedBox(height: 6),
-
           // Subject & Date Row
           Row(
             children: [
@@ -63,6 +61,7 @@ class AssignmentCard extends StatelessWidget {
                   Text(
                     subject,
                     style: const TextStyle(color: Colors.grey),
+                    softWrap: true,
                   ),
                 ],
               ),
@@ -74,13 +73,13 @@ class AssignmentCard extends StatelessWidget {
                   Text(
                     date,
                     style: const TextStyle(color: Colors.grey),
+                    softWrap: true,
                   ),
                 ],
               ),
             ],
           ),
           const SizedBox(height: 8),
-
           // Attachment if available
           if (hasAttachment)
             Row(
@@ -94,7 +93,6 @@ class AssignmentCard extends StatelessWidget {
               ],
             ),
           if (hasAttachment) const SizedBox(height: 8),
-
           // Buttons Row
           Row(
             children: [

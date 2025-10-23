@@ -131,37 +131,36 @@ class _MobileScaffoldState extends State<MobileScaffold> {
               const SizedBox(height: 20),
 
               // Assignments Section
-              Text(
-                'Assignments',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: AppColors.green,
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              const SizedBox(height: 12),
+// Assignments Section
+Text(
+  'Assignments',
+  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+        color: AppColors.green,
+        fontWeight: FontWeight.bold,
+      ),
+),
+const SizedBox(height: 12),
 
-              // Grid View for Assignments
-              GridView.builder(
-                shrinkWrap: true, // Important for SingleChildScrollView
-                physics: const NeverScrollableScrollPhysics(), // Prevent nested scrolling
-                itemCount: 4,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 0.8, // Adjusted for better text display
-                ),
-                itemBuilder: (context, index) {
-                  final assignment = assignments[index];
-                 return ContainerListWidget(
-                        title: assignment['title'],
-                        subject: assignment['subject'],
-                        dueDate: assignment['dueDate'],
-                        isCompleted: assignment['isCompleted'],
-                      );
-                },
-              ),
-              const SizedBox(height: 24),
+// FIXED GridView - No overflow guarantee
+GridView.count(
+  shrinkWrap: true,
+  physics: const NeverScrollableScrollPhysics(),
+  crossAxisCount: 2,
+  crossAxisSpacing: 10,
+  mainAxisSpacing: 10,
+  childAspectRatio: 1.1, // Perfect for 100px height
+  children: assignments.map((assignment) {
+    return PerfectFitContainerWidget(
+      title: assignment['title'],
+      subject: assignment['subject'],
+      dueDate: assignment['dueDate'],
+      isCompleted: assignment['isCompleted'],
+      themeColor: AppColors.green,
+    );
+  }).toList(),
+),
+
+const SizedBox(height: 24),
 
               // Messages Section
               Text(

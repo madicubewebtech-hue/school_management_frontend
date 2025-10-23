@@ -1,112 +1,109 @@
 import 'package:flutter/material.dart';
 
-class ContainerListWidget extends StatelessWidget {
+class PerfectFitContainerWidget extends StatelessWidget {
   final String title;
   final String subject;
   final String dueDate;
   final bool isCompleted;
-  final double? maxHeight;
+  final Color themeColor;
 
-  const ContainerListWidget({
-    super.key,
+  const PerfectFitContainerWidget({
+    Key? key,
     required this.title,
     required this.subject,
     required this.dueDate,
-    this.isCompleted = false,
-    this.maxHeight,
-  });
+    required this.isCompleted,
+    required this.themeColor,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final Color themeColor = Colors.teal;
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final bool isTablet = screenWidth >= 600; // simple tablet breakpoint
-
-    return Container(
-      // Allow parent to pass a maxHeight, otherwise use tablet heuristic
-      constraints: maxHeight != null
-          ? BoxConstraints(maxHeight: maxHeight!)
-          : (isTablet ? const BoxConstraints(maxHeight: 140) : null),
-      alignment: Alignment.topLeft,
-      decoration: BoxDecoration(
-        color: themeColor.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: themeColor.withOpacity(0.3), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: themeColor.withOpacity(0.2),
-            blurRadius: 4,
-            offset: const Offset(2, 3),
-          ),
-        ],
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        minHeight: 100,
+        maxHeight: 100,
       ),
-      child: Padding(
-        padding: EdgeInsets.all(isTablet ? 10 : 12),
+      child: Container(
+        decoration: BoxDecoration(
+          color: themeColor.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: themeColor.withOpacity(0.3), width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: themeColor.withOpacity(0.15),
+              blurRadius: 4,
+              offset: const Offset(2, 3),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(8),
         child: Column(
-          mainAxisSize: MainAxisSize.min, // Shrink to fit content
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Title
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+            // Title - Fixed height
+            SizedBox(
+              height: 32,
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
                 ),
-                const SizedBox(height: 6),
-                
-                // Subject
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+
+            // Subject and Due Date in one row
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    subject,
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: themeColor,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 4),
                 Text(
-                  subject,
+                  dueDate,
                   style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[700],
+                    fontSize: 9,
+                    color: Colors.teal[700],
                     fontWeight: FontWeight.w500,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
-                
-                // Due date
-                Text(
-                  'Due: $dueDate',
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: Colors.teal[700],
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
               ],
             ),
 
-            // Status at bottom - sized to content
+            // Status badge
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              padding: const EdgeInsets.symmetric(vertical: 4),
               decoration: BoxDecoration(
                 color: isCompleted
                     ? Colors.greenAccent.withOpacity(0.2)
-                    : Colors.orangeAccent.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(8),
+                    : Colors.orangeAccent.withOpacity(0.25),
+                borderRadius: BorderRadius.circular(6),
               ),
-              child: Text(
-                isCompleted ? 'Done' : 'Pending',
-                style: TextStyle(
-                  color: isCompleted ? Colors.green[700] : Colors.orange[800],
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12,
+              child: Center(
+                child: Text(
+                  isCompleted ? 'Done' : 'Pending',
+                  style: TextStyle(
+                    color: isCompleted ? Colors.green[700] : Colors.orange[800],
+                    fontWeight: FontWeight.w600,
+                    fontSize: 10,
+                  ),
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
           ],
