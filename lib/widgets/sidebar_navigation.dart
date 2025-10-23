@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:school_management_frontend/new/student_dashboard.dart';
 import 'package:school_management_frontend/screens/admissions/admission_form.dart';
 import 'package:school_management_frontend/screens/assignments/assignment_list_screen.dart';
 import 'package:school_management_frontend/screens/bottom_screens.dart/student_dashboard.dart';
@@ -48,7 +49,7 @@ class SidebarNavigation extends StatelessWidget {
     {
       'title': 'Fee',
       'icon': Icons.payment,
-      'page': const StudentDashboard(),
+      'page':  BottomNavbar(),
       'color': Colors.red
     },
     {

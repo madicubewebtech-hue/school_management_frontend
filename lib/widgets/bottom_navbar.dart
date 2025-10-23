@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:school_management_frontend/new/student_dashboard.dart';
 import 'package:school_management_frontend/screens/bottom_screens.dart/timetable.dart';
 import 'package:school_management_frontend/screens/bottom_screens.dart/chat.dart';
 import 'package:school_management_frontend/screens/bottom_screens.dart/notification.dart';
 import 'package:school_management_frontend/screens/bottom_screens.dart/profile.dart';
-import 'package:school_management_frontend/screens/responsive/responsive_layout.dart';
-import 'package:school_management_frontend/screens/responsive/mobile_scaffold.dart';
-import 'package:school_management_frontend/screens/responsive/tablet_scaffold.dart';
-import 'package:school_management_frontend/screens/responsive/desktop_scaffold.dart';
+
 import 'package:school_management_frontend/theme/app_colors.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
@@ -25,9 +23,10 @@ class _BottomNavbarState extends State<BottomNavbar> {
   final List<Widget> _screens = [
      Timetable(),
      ChatScreen(),
-     ResponsiveLayout(mobileScaffold: const MobileScaffold(),
-        tabletScaffold: const TabletScaffold(),
-        desktopScaffold: const DesktopScaffold(),),
+     StudentDashboard(),
+    //  ResponsiveLayout(mobileScaffold: const MobileScaffold(),
+    //     tabletScaffold: const TabletScaffold(),
+    //     desktopScaffold: const DesktopScaffold(),),
      NotificationScreen(),
      ProfileScreen(),
   ];
