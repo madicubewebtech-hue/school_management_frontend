@@ -94,150 +94,26 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       const SizedBox(height: 50),
 
-                      /// 🏫 SCHOOL CODE
-                      const Text(
-                        "School Code",
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: TextField(
-                          controller: _schoolCodeController,
-                          decoration: InputDecoration(
-                            hintText: "Enter school code",
-                            hintStyle: TextStyle(
-                              color: Colors.grey[400],
-                              fontSize: 14,
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 18,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                        ),
+                      /// 🏫 SCHOOL CODE - UPDATED STYLING
+                      _buildLoginTextField(
+                        label: "School Code",
+                        controller: _schoolCodeController,
+                        hintText: "Enter school code",
                       ),
 
                       const SizedBox(height: 25),
 
-                      /// 📧 USER NAME
-                      const Text(
-                        "Email ",
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: TextField(
-                          controller: _emailController,
-                          decoration: InputDecoration(
-                            hintText: "Enter your email",
-                            hintStyle: TextStyle(
-                              color: Colors.grey[400],
-                              fontSize: 14,
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 18,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                        ),
+                      /// 📧 EMAIL - UPDATED STYLING
+                      _buildLoginTextField(
+                        label: "Email",
+                        controller: _emailController,
+                        hintText: "Enter your email",
                       ),
 
                       const SizedBox(height: 25),
 
-                      /// 🔒 PASSWORD
-                      const Text(
-                        "Password",
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: TextField(
-                          controller: _passwordController,
-                          obscureText: _obscurePassword,
-                          decoration: InputDecoration(
-                            hintText: "Enter your password",
-                            hintStyle: TextStyle(
-                              color: Colors.grey[400],
-                              fontSize: 14,
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 18,
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscurePassword
-                                    ? Icons.visibility_off_outlined
-                                    : Icons.visibility_outlined,
-                                color: Colors.grey[600],
-                                size: 22,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _obscurePassword = !_obscurePassword;
-                                });
-                              },
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                        ),
-                      ),
+                      /// 🔒 PASSWORD - UPDATED STYLING
+                      _buildLoginPasswordField(),
 
                       const SizedBox(height: 40),
 
@@ -246,12 +122,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: double.infinity,
                         height: 55,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(12), // Changed to match Admission form
                           boxShadow: [
                             BoxShadow(
-                              color:  AppColors.curvedBackground.withOpacity(0.3),
-                              blurRadius: 15,
-                              offset: const Offset(0, 8),
+                              color: AppColors.green.withOpacity(0.3), // Changed to AppColors.green
+                              blurRadius: 8, // Reduced blur
+                              offset: const Offset(0, 4),
                             ),
                           ],
                         ),
@@ -262,16 +138,17 @@ class _LoginScreenState extends State<LoginScreen> {
                             print("Password: ${_passwordController.text}");
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => BottomNavbar()),
+                              MaterialPageRoute(builder: (context) => const BottomNavbar()),
                             );
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.curvedBackground,
+                            backgroundColor: AppColors.green, // Changed to AppColors.green
                             foregroundColor: Colors.white,
                             elevation: 0,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
+                              borderRadius: BorderRadius.circular(12), // Changed to match Admission form
                             ),
+                            padding: const EdgeInsets.symmetric(vertical: 16), // Added padding like Admission form
                           ),
                           child: const Text(
                             "Sign In",
@@ -290,9 +167,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       Center(
                         child: TextButton(
                           onPressed: () {
-                         Navigator.push(
+                            Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => TeacherDashboard()),
+                              MaterialPageRoute(builder: (context) => const TeacherDashboard()),
                             );
                           },
                           child: const Text(
@@ -313,6 +190,147 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  // Custom Login Text Field with Admission Form Styling
+  Widget _buildLoginTextField({
+    required String label,
+    required TextEditingController controller,
+    required String hintText,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Label - Updated to match Admission form
+        Text(
+          label,
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 6),
+        
+        // Text Field Container - Updated to match Admission form
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.green.withOpacity(0.1), // Changed to AppColors.green
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              hintText: hintText,
+              hintStyle: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 14,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: AppColors.green.withOpacity(0.3)), // Changed to AppColors.green
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: AppColors.green.withOpacity(0.3)), // Changed to AppColors.green
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: AppColors.green, width: 2), // Changed to AppColors.green
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 14,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Custom Password Field with Admission Form Styling
+  Widget _buildLoginPasswordField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Label - Updated to match Admission form
+        const Text(
+          "Password",
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 6),
+        
+        // Password Field Container - Updated to match Admission form
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.green.withOpacity(0.1), // Changed to AppColors.green
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: TextField(
+            controller: _passwordController,
+            obscureText: _obscurePassword,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              hintText: "Enter your password",
+              hintStyle: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 14,
+              ),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscurePassword
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                  color: Colors.grey[600],
+                  size: 22,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _obscurePassword = !_obscurePassword;
+                  });
+                },
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: AppColors.green.withOpacity(0.3)), // Changed to AppColors.green
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: BorderSide(color: AppColors.green.withOpacity(0.3)), // Changed to AppColors.green
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: AppColors.green, width: 2), // Changed to AppColors.green
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 14,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
