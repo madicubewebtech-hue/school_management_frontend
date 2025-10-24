@@ -116,7 +116,7 @@ class AssignmentCardUI extends StatelessWidget {
   Widget _buildTabletCard() {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  themeColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -231,7 +231,7 @@ class AssignmentCardUI extends StatelessWidget {
         minHeight: 180,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  themeColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(

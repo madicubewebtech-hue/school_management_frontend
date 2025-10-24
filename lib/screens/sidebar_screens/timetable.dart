@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:school_management_frontend/theme/app_colors.dart';
 import 'package:school_management_frontend/widgets/bottom_navbar.dart';
-import 'package:school_management_frontend/new/chat_list_screen.dart';
+import 'package:school_management_frontend/new/chat/chat_list_screen.dart';
 import 'package:school_management_frontend/widgets/sidebar_navigation.dart';
 
 class TimetableScreen extends StatefulWidget {

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:school_management_frontend/layouts/responsive_scaffolds.dart';
+
 import 'package:school_management_frontend/new/assignment_card_ui.dart';
-import 'package:school_management_frontend/new/chat_list_screen.dart';
+import 'package:school_management_frontend/new/chat/chat_list_screen.dart';
 import 'package:school_management_frontend/new/message_card_ui.dart';
 import 'package:school_management_frontend/theme/app_colors.dart';
 
@@ -134,6 +135,7 @@ class StudentDashboard extends StatelessWidget {
 
     if (isMobile) {
       return ResponsiveScaffolds.mobileScaffold(
+        
         title: 'Student Dashboard',
         body: bodyContent,
       );

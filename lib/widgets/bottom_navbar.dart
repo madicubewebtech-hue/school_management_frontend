@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:school_management_frontend/new/chat/chat_list_screen.dart';
 import 'package:school_management_frontend/new/student_dashboard.dart';
 import 'package:school_management_frontend/screens/bottom_screens.dart/timetable.dart';
-import 'package:school_management_frontend/screens/bottom_screens.dart/chat.dart';
+import 'package:school_management_frontend/new/chat/chat.dart';
 import 'package:school_management_frontend/screens/bottom_screens.dart/notification.dart';
 import 'package:school_management_frontend/screens/bottom_screens.dart/profile.dart';
 
@@ -22,7 +23,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
   // Screens list
   final List<Widget> _screens = [
      Timetable(),
-     ChatScreen(),
+     ChatListScreen(),
      StudentDashboard(),
     //  ResponsiveLayout(mobileScaffold: const MobileScaffold(),
     //     tabletScaffold: const TabletScaffold(),

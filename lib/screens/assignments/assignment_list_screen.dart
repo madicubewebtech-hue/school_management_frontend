@@ -3,7 +3,7 @@ import 'package:school_management_frontend/screens/assignments/create_assignment
 import 'package:school_management_frontend/theme/app_colors.dart';
 import 'package:school_management_frontend/widgets/bottom_navbar.dart';
 import 'assignment_widgets.dart';
-import 'package:school_management_frontend/new/chat_list_screen.dart';
+import 'package:school_management_frontend/new/chat/chat_list_screen.dart';
 import 'package:school_management_frontend/widgets/sidebar_navigation.dart';
 
 // ----------------- Assignment List Screen -----------------
